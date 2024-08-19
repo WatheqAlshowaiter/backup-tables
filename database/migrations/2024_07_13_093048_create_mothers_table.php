@@ -12,7 +12,6 @@ use WatheqAlshowaiter\BackupTablesServiceProvider\Constants;
  */
 class CreateMothersTable extends Migration
 {
-
     public function up(): void
     {
         Schema::create('mothers', function (Blueprint $table) {

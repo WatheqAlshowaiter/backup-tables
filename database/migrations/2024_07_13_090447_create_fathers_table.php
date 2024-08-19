@@ -2,9 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
-use WatheqAlshowaiter\BackupTablesServiceProvider\Constants;
 
 class CreateFathersTable extends Migration
 {
