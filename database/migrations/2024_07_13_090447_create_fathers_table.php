@@ -16,8 +16,11 @@ class CreateFathersTable extends Migration
             $table->string('first_name'); // required
             $table->string('last_name'); // required
             $table->string('email'); // required
-            $table->string('full_name')->storedAs("CONCAT(first_name, ' ', last_name)"); // Correct SQL syntax for stored column
-            $table->timestamps(); // created_at, updated_at => ignored because they are nullable
+            if (DB::getDriverName() === 'sqlite') {
+                $table->string('full_name')->storedAs("first_name || ' ' || last_name"); // SQLite concatenation
+            } else {
+                $table->string('full_name')->storedAs("CONCAT(first_name, ' ', last_name)"); // MySQL syntax
+            }            $table->timestamps(); // created_at, updated_at => ignored because they are nullable
         });
     }
 

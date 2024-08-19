@@ -81,7 +81,7 @@ class BackupTablesService
                     $this->backupTablesForForPostgres($newTableName, $table);
                     break;
                 case 'sqlsrv':
-                    return $this->backupTablesForForSqlServer($newTableName, $table);
+                    $this->backupTablesForForSqlServer($newTableName, $table);
                     break;
                 default:
                     throw Exception('NOT SUPPORTED DATABASE DRIVER');
