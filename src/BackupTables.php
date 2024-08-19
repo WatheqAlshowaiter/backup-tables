@@ -4,8 +4,6 @@ namespace WatheqAlshowaiter\BackupTablesServiceProvider;
 
 use Illuminate\Support\Facades\Facade;
 
-
-
 /**
  * public function backupTables($tablesToBackup = []): bool
  * protected function processBackup(array $tablesToBackup = []): array

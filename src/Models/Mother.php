@@ -4,10 +4,7 @@ namespace WatheqAlshowaiter\BackupTablesServiceProvider\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * @deprecated
  */
-class Mother extends Model
-{
-}
+class Mother extends Model {}

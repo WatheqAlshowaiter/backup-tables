@@ -30,8 +30,6 @@ class BackupTablesTest extends TestCase
         $this->assertFalse(BackupTables::backupTables($emptyArray));
     }
 
-
-
     public function test_generate_single_table_backup_with_proper_name()
     {
         Carbon::setTestNow();
@@ -39,7 +37,7 @@ class BackupTablesTest extends TestCase
         $tableName = 'fathers';
         BackupTables::backupTables($tableName);
 
-        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
     }
@@ -53,12 +51,12 @@ class BackupTablesTest extends TestCase
             'id' => 1,
             'first_name' => 'Ahmed',
             'last_name' => 'Saleh',
-            'email' => 'father@email.com'
+            'email' => 'father@email.com',
         ]);
 
         BackupTables::backupTables($tableName);
 
-        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
@@ -77,17 +75,17 @@ class BackupTablesTest extends TestCase
             'id' => 1,
             'first_name' => 'Ahmed',
             'last_name' => 'Saleh',
-            'email' => 'father@email.com'
+            'email' => 'father@email.com',
         ]);
 
         Son::create([
             'father_id' => 1,
         ]);
 
-        BackupTables::backupTables([ $tableName2, $tableName]);
+        BackupTables::backupTables([$tableName2, $tableName]);
 
-        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
-        $newTableName2 = $tableName2 . '_backup_' . now()->format('Y_m_d_H_i_s');
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+        $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
         $this->assertTrue(Schema::hasTable($newTableName2));

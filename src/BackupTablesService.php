@@ -6,11 +6,11 @@ use Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Console\Output\ConsoleOutput;
+
 use function Exception;
 
 class BackupTablesService
 {
-
     public array $response = [];
 
     public function backupTables($tablesToBackup)
@@ -19,19 +19,19 @@ class BackupTablesService
 
         if (empty($tablesToBackup)) {
             $this->response[] = 'No tables specified to clone.';
+
             return false;
         }
 
-
         $result = $this->processBackup($tablesToBackup);
 
-        $output = new ConsoleOutput();
+        $output = new ConsoleOutput;
 
         foreach ($result['response'] as $message) {
             $output->writeln($message);
         }
 
-        if (!empty($result['newCreatedTables'])) {
+        if (! empty($result['newCreatedTables'])) {
             $output->writeln('All tables cloned successfully ..');
             $output->writeln('Newly created tables:');
             foreach ($result['newCreatedTables'] as $tableName) {
@@ -52,7 +52,7 @@ class BackupTablesService
         $currentDateTime = now()->format('Y_m_d_H_i_s');
 
         foreach ($tablesToBackup as $table) {
-            $newTableName = $table . '_backup_' . $currentDateTime;
+            $newTableName = $table.'_backup_'.$currentDateTime;
             $newTableName = str_replace(['-', ':'], '_', $newTableName);
 
             if (Schema::hasTable($newTableName)) {
@@ -61,11 +61,11 @@ class BackupTablesService
                 continue;
             }
 
-            if (!Schema::hasTable($table)) {
+            if (! Schema::hasTable($table)) {
                 $this->response[] = "Table `$table` is not exists. check the table name again";
+
                 continue;
             }
-
 
             $databaseDriver = DB::connection()->getDriverName();
 
@@ -98,7 +98,6 @@ class BackupTablesService
             // todo
         }
 
-
     }
 
     protected function backupTablesForSqlite($newTableName, $table)
@@ -110,10 +109,8 @@ class BackupTablesService
 
         DB::statement(/**@lang SQLite* */ "INSERT INTO $newTableName SELECT * FROM $table");
 
-
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
-
 
         return [
             'response' => $response,
@@ -137,7 +134,7 @@ class BackupTablesService
 
         // Step 3: Escape reserved keywords and construct the column list
         $escapedColumns = array_map(function ($column) {
-            return '`' . $column . '`'; // Escape column names with backticks
+            return '`'.$column.'`'; // Escape column names with backticks
         }, $nonGeneratedColumns);
 
         // Convert array to comma-separated string
