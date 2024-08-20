@@ -123,7 +123,6 @@ class BackupTablesService
     protected function backupTablesForForMysqlAndMariaDb($newTableName, $table): array
     {
         DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
-        //DB::statement(/**@lang MySQL**/ "INSERT INTO $newTableName SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
