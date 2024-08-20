@@ -110,7 +110,7 @@ class BackupTablesService
 
         //$allColumns = DB::selectOne(/**@lang SQLite* */ "select * from $table");
 
-            DB::statement(/**@lang SQLite* */ "INSERT INTO $newTableName SELECT * FROM $table");
+        DB::statement(/**@lang SQLite* */ "INSERT INTO $newTableName SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
