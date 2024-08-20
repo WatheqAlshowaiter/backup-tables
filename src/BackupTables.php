@@ -1,6 +1,7 @@
 <?php
 
-namespace WatheqAlshowaiter\BackupTablesServiceProvider;
+namespace WatheqAlshowaiter\BackupTables;
+
 
 use Illuminate\Support\Facades\Facade;
 

@@ -45,12 +45,12 @@
     },
     "autoload": {
         "psr-4": {
-            "WatheqAlshowaiter\\BackupTablesServiceProvider\\": "src/"
+            "WatheqAlshowaiter\\BackupTables\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "WatheqAlshowaiter\\BackupTablesServiceProvider\\Tests\\": "tests/"
+            "WatheqAlshowaiter\\BackupTables\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -63,10 +63,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BackupTablesServiceProvider"
+                "WatheqAlshowaiter\\BackupTables\\BackupTablesServiceProvider"
             ],
             "aliases": {
-                "BackupTablesServiceProvider": "WatheqAlshowaiter\\BackupTablesServiceProvider\\Facades\\BackupTablesServiceProvider"
+                "BackupTables": "WatheqAlshowaiter\\BackupTables\\BackupTables"
             }
         }
     },

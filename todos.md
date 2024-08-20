@@ -3,19 +3,21 @@
 - [x] new banner and make it in GitHub.com
 - [x] make BackupTables facade if applicable
 - [ ] customize `Y_m_d_H_i_s`
+- [ ] add deepbackup(structure+data+virtual+stored columns)
+- [ ] add ShallowBackup(structure+data)
+- [ ] add OnlyData(structure+data)
+- [ ] add OnlyStructure(structure)
+- [ ] improve namings for method names 
+- [ ] add datbase droplist (sqilte, mysql, sql server, mariadb, postgres) + version for each of them in the ISSUE_TEMPLATE, and make it required and even add it to the next
+- [ ] use Stratigy pattern instead of switch with OOP features
 - [ ] clean up the code
 - [ ] write automated tests for the code
 - [ ] write documentation for the code
 - [ ] add the package to packagist
 - [ ] try previous versions of laravel until laravel 6
-    - [ ] 11 => sqlite, mysql/mariadb(1st party supported in Laravel 11), postgres
+    - [ ] 11 => sqlite, mysql/mariadb (1st party supported in Laravel 11), postgres
     - [ ] 10 => sqlite, mysql, postgres
     - [ ] 9  => sqlite, mysql, postgres
     - [ ] 8  => sqlite, mysql, postgres
     - [ ] 7  => sqlite, mysql, postgres
     - [ ] 6  => sqlite, mysql, postgres
-- [x] try previous versions of php until php 7.4
-    - [ ] 8.2
-    - [ ] 8.1
-    - [ ] 8.0
-    - [ ] 7.4

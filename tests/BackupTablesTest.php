@@ -1,14 +1,16 @@
 <?php
 
-namespace WatheqAlshowaiter\BackupTablesServiceProvider\Tests;
+namespace WatheqAlshowaiter\BackupTables\Tests;
 
 use Carbon\Carbon;
-use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
-use WatheqAlshowaiter\BackupTablesServiceProvider\BackupTables;
-use WatheqAlshowaiter\BackupTablesServiceProvider\Models\Father;
-use WatheqAlshowaiter\BackupTablesServiceProvider\Models\Son;
+use WatheqAlshowaiter\BackupTables\BackupTables;
+use WatheqAlshowaiter\BackupTables\Constants;
+use WatheqAlshowaiter\BackupTables\Models\Father;
+use WatheqAlshowaiter\BackupTables\Models\Son;
+use Illuminate\Support\Facades\DB;
 
 class BackupTablesTest extends TestCase
 {
@@ -62,7 +64,11 @@ class BackupTablesTest extends TestCase
 
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
-        $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // virtual tables
+
+        if(DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT){
+            $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
+        }
     }
 
     public function test_generate_multiple_table_backup()
@@ -92,15 +98,18 @@ class BackupTablesTest extends TestCase
 
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
-        $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // virtual tables
-        $this->assertEquals(Son::value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
 
+        if(DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT){
+            $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
+        }
+
+        $this->assertEquals(Son::value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
     }
 
     public function test_generate_shallow_table_backup()
     {
         $this->markTestSkipped();
-
     }
 
     public function test_generate_only_data_table_backup()

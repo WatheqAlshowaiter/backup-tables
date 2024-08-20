@@ -1,9 +1,9 @@
 <?php
 
-namespace WatheqAlshowaiter\BackupTablesServiceProvider\Tests;
+namespace WatheqAlshowaiter\BackupTables\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
-use WatheqAlshowaiter\BackupTablesServiceProvider\BackupTablesServiceProvider;
+use WatheqAlshowaiter\BackupTables\BackupTablesServiceProvider;
 
 class TestCase extends Orchestra
 {
