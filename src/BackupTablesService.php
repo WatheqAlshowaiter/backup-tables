@@ -118,31 +118,10 @@ class BackupTablesService
 
     protected function backupTablesForForMysqlAndMariaDb($newTableName, $table): array
     {
-        // Step 1: Create the new table structure, excluding generated columns
-        // DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table WHERE 1=0;");
-        DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
-
-        DB::statement(/**@lang MySQL**/ "INSERT INTO $newTableName SELECT * FROM $table");
-
-        // Step 2: Fetch all non-generated columns
-        // $nonGeneratedColumns = DB::table('INFORMATION_SCHEMA.COLUMNS')
-        //     ->select('COLUMN_NAME')
-        //     ->where('TABLE_SCHEMA', config('database.connections.mysql.database'))
-        //     ->where('TABLE_NAME', $table)
-        //     ->where('EXTRA', 'NOT LIKE', '%VIRTUAL GENERATED%')
-        //     ->pluck('COLUMN_NAME')
-        //     ->toArray();
-
-        // Step 3: Escape reserved keywords and construct the column list
-        // $escapedColumns = array_map(function ($column) {
-        //     return '`'.$column.'`'; // Escape column names with backticks
-        // }, $nonGeneratedColumns);
-
-        // Convert array to comma-separated string
-        // $columnList = implode(', ', $escapedColumns);
-
-        // Step 4: Insert data excluding generated columns
-        // DB::statement(/**@lang MySQL* */ "INSERT INTO $newTableName ($columnList) SELECT $columnList FROM $table");
+        if($this->getMysqlVersion() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT){
+            DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+            DB::statement(/**@lang MySQL**/ "INSERT INTO $newTableName SELECT * FROM $table");
+        }
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
@@ -162,5 +141,10 @@ class BackupTablesService
     protected function backupTablesForForSqlServer($newTableName, $table)
     {
         dd('sql server');
+    }
+
+    private function getMysqlVersion()
+    {
+        return (float) DB::select('select version()')[0]->{'version()'};
     }
 }
