@@ -2,7 +2,6 @@
 
 namespace WatheqAlshowaiter\BackupTables;
 
-
 use Illuminate\Support\Facades\Facade;
 
 /**
