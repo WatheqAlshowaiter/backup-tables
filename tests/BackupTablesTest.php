@@ -5,12 +5,12 @@ namespace WatheqAlshowaiter\BackupTables\Tests;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use WatheqAlshowaiter\BackupTables\BackupTables;
 use WatheqAlshowaiter\BackupTables\Constants;
 use WatheqAlshowaiter\BackupTables\Models\Father;
 use WatheqAlshowaiter\BackupTables\Models\Son;
-use Illuminate\Support\Facades\DB;
 
 class BackupTablesTest extends TestCase
 {
@@ -65,7 +65,7 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
 
-        if(DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT){
+        if (DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
             $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
@@ -99,7 +99,7 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
 
-        if(DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT){
+        if (DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
             $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }

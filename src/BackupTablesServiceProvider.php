@@ -2,10 +2,9 @@
 
 namespace WatheqAlshowaiter\BackupTables;
 
-
 use Illuminate\Support\ServiceProvider;
 
-class  BackupTablesServiceProvider extends ServiceProvider
+class BackupTablesServiceProvider extends ServiceProvider
 {
     public function register()
     {
