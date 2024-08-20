@@ -115,7 +115,6 @@ class BackupTablesTest extends TestCase
     public function test_generate_only_data_table_backup()
     {
         $this->markTestSkipped();
-
     }
 
     public function test_generate_multiple_models_backup()

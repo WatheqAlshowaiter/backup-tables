@@ -23,10 +23,16 @@ class CreateFathersTable extends Migration
                 $table->string('status')->storedAs("IF(active = 1, TRUE, FALSE)");
             }
 
-            if ((float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName()!= 'mysql'){
+            if ((float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName()== 'sqlite'){
                 $table->string('full_name')->virtualAs("first_name || ' ' || last_name"); // (MySQL/PostgreSQL/SQLite)
                 $table->string('status')->storedAs("CASE WHEN active = 1 THEN 'Active' ELSE 'Inactive' END"); // (MySQL/PostgreSQL/SQLite)
             }
+
+            if ((float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName()== 'pgsql'){
+                $table->string('full_name')->virtualAs("first_name || ' ' || last_name"); // (MySQL/PostgreSQL/SQLite)
+                $table->string('status')->storedAs("CASE WHEN active = 1 THEN 'Active' ELSE 'Inactive' END"); // (MySQL/PostgreSQL/SQLite)
+            }
+
 
             // todo SQL Server persisted()
             // todo postgres
