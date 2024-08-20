@@ -11,6 +11,7 @@
 - [ ] add datbase droplist (sqilte, mysql, sql server, mariadb, postgres) + version for each of them in the ISSUE_TEMPLATE, and make it required and even add it to the next
 - [ ] use Stratigy pattern instead of switch with OOP features
 - [ ] clean up the code
+- [ ] php storm recommendations
 - [ ] write automated tests for the code
 - [ ] write documentation for the code
 - [ ] add the package to packagist
