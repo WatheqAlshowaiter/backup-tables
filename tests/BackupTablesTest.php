@@ -63,7 +63,7 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
 
         if(DB::getDriverName() == 'mariadb'){ // todo debugging
-            dump(Father::all('first_name'));
+            dump(Father::first()->first_name);
         }
 
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
@@ -101,7 +101,7 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName2));
 
         if(DB::getDriverName() == 'mariadb'){ // todo debugging
-            dump(Father::all('first_name'));
+            dump(Father::first()->first_name);
         }
 
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
