@@ -67,6 +67,8 @@ class BackupTablesService
 
             $databaseDriver = DB::connection()->getDriverName();
 
+            Schema::disableForeignKeyConstraints();
+
             switch ($databaseDriver) {
                 case 'sqlite':
                     $this->backupTablesForSqlite($newTableName, $table);
@@ -83,7 +85,11 @@ class BackupTablesService
                     break;
                 default:
                     throw Exception('NOT SUPPORTED DATABASE DRIVER');
+
             }
+
+            Schema::enableForeignKeyConstraints();
+
         }
 
         return [
