@@ -66,8 +66,8 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
 
         //if (DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
+        $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+        $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         //}
     }
 
@@ -100,8 +100,8 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
 
         //if (DB::getDriverName() == 'mysql' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
+        $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+        $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         //}
 
         $this->assertEquals(Son::value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
