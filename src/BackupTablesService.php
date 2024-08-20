@@ -86,7 +86,6 @@ class BackupTablesService
                 default:
                     throw Exception('NOT SUPPORTED DATABASE DRIVER');
             }
-
             Schema::enableForeignKeyConstraints();
 
         }
@@ -123,10 +122,8 @@ class BackupTablesService
 
     protected function backupTablesForForMysqlAndMariaDb($newTableName, $table): array
     {
-        if ($this->getMysqlVersion() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
-            DB::statement(/**@lang MySQL**/ "INSERT INTO $newTableName SELECT * FROM $table");
-        }
+        DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+        //DB::statement(/**@lang MySQL**/ "INSERT INTO $newTableName SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
