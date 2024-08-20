@@ -85,7 +85,6 @@ class BackupTablesService
                     break;
                 default:
                     throw Exception('NOT SUPPORTED DATABASE DRIVER');
-
             }
 
             Schema::enableForeignKeyConstraints();
