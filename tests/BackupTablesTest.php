@@ -66,8 +66,8 @@ class BackupTablesTest extends TestCase
             dump(Father::first()->first_name);
         }
 
-        $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
+        $this->assertEquals(Father::first()->first_name, DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(Father::first()->email, DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
@@ -104,8 +104,8 @@ class BackupTablesTest extends TestCase
             dump(Father::first()->first_name);
         }
 
-        $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
+        $this->assertEquals(Father::first()->first_name, DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(Father::first()->email, DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
