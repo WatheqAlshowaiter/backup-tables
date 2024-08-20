@@ -122,6 +122,8 @@ class BackupTablesService
 
     protected function backupTablesForForMysqlAndMariaDb($newTableName, $table): array
     {
+        logger('mariadb');
+
         DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
