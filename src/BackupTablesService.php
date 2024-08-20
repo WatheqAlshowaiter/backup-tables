@@ -135,8 +135,15 @@ class BackupTablesService
 
     protected function backupTablesForForPostgres($newTableName, $table)
     {
-        dd('postgres');
+        DB::statement(/**@lang PostgreSQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
+        $newCreatedTables[] = $newTableName;
+        $response[] = " Table '$table' cloned successfully.";
+
+        return [
+            'response' => $response,
+            'newCreatedTables' => $newCreatedTables,
+        ];
     }
 
     protected function backupTablesForForSqlServer($newTableName, $table)
