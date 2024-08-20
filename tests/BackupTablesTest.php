@@ -62,7 +62,7 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
-        if(DB::getDriverName() == 'mariadb'){ // todo debugging
+        if (DB::getDriverName() == 'mariadb') { // todo debugging
             dump(Father::all('first_name'));
         }
 
@@ -100,14 +100,14 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
         $this->assertTrue(Schema::hasTable($newTableName2));
 
-        if(DB::getDriverName() == 'mariadb'){ // todo debugging
+        if (DB::getDriverName() == 'mariadb') { // todo debugging
             dump(Father::all('first_name'));
         }
 
         $this->assertEquals(Father::value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(Father::value('email'), DB::table($newTableName)->value('email'));
 
-        if (DB::getDriverName() == 'mysql' ||   DB::getDriverName() == 'mariadb' ||(float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
             $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
