@@ -18,7 +18,7 @@ class CreateFathersTable extends Migration
             $table->string('last_name'); // required
             $table->string('email'); // required
 
-            if (DB::getDriverName() == 'mysql'|| DB::getDriverName() == 'mariadb') {
+            if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb') {
                 $table->string('full_name')->virtualAs("CONCAT(first_name, ' ', last_name)");
                 $table->string('status')->storedAs('IF(active = 1, TRUE, FALSE)');
             }
