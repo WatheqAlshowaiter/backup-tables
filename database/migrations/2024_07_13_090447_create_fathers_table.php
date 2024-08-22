@@ -33,13 +33,16 @@ class CreateFathersTable extends Migration
                 $table->string('status')->storedAs("CASE WHEN active THEN 'Active' ELSE 'Inactive' END");
             }
 
-            if ((float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName() == 'sqlsrv') {
-                $table->string('full_name')->persisted("CONCAT(first_name, ' ', last_name)");
-            }
 
             $table->timestamps(); // created_at, updated_at => ignored because they are nullable
         });
 
+        if ((float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName() == 'sqlsrv') {
+            DB::statement(/**@lang TSQL */ "
+            ALTER TABLE fathers
+            ADD full_name AS CONCAT(first_name, ' ', last_name) PERSISTED;
+        ");
+        }
     }
 
     public function down(): void

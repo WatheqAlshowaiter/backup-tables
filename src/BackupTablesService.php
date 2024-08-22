@@ -102,11 +102,11 @@ class BackupTablesService
     protected function backupTablesForSqlite($newTableName, $table)
     {
         // Step 1: Create the new table structure, excluding generated columns
-        DB::statement(/**@lang SQLite* */ "CREATE TABLE $newTableName AS SELECT * FROM $table WHERE 1=0;");
+        DB::statement(/**@lang SQLite */ "CREATE TABLE $newTableName AS SELECT * FROM $table WHERE 1=0;");
 
         //$allColumns = DB::selectOne(/**@lang SQLite* */ "select * from $table");
 
-        DB::statement(/**@lang SQLite* */ "INSERT INTO $newTableName SELECT * FROM $table");
+        DB::statement(/**@lang SQLite */ "INSERT INTO $newTableName SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
@@ -121,7 +121,7 @@ class BackupTablesService
     {
         logger('mariadb');
 
-        DB::statement(/**@lang MySQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+        DB::statement(/**@lang MySQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
@@ -134,7 +134,7 @@ class BackupTablesService
 
     protected function backupTablesForForPostgres($newTableName, $table)
     {
-        DB::statement(/**@lang PostgreSQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+        DB::statement(/**@lang PostgreSQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
@@ -147,7 +147,7 @@ class BackupTablesService
 
     protected function backupTablesForForSqlServer($newTableName, $table)
     {
-        DB::statement("SELECT * INTO $newTableName FROM $table");
+        DB::statement(/**@lang TSQL*/"SELECT * INTO $newTableName FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
