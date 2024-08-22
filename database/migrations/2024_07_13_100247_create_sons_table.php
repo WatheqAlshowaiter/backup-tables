@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use WatheqAlshowaiter\BackupTables\Constants;
 
 class CreateSonsTable extends Migration
 {
@@ -10,14 +12,11 @@ class CreateSonsTable extends Migration
     {
         Schema::create('sons', function (Blueprint $table) {
             $table->bigIncrements('id'); // primary key => ignored
-            //$table->unsignedBigInteger('father_id');
-            //$table->foreignId('father_id'); // todo stop foreign keys temp
 
-            if((float) \Illuminate\Support\Facades\App::version() >= \WatheqAlshowaiter\BackupTables\Constants::VERSION_AFTER_FOREIGN_ID_SUPPORT){
+            if((float) App::version() >= Constants::VERSION_AFTER_FOREIGN_ID_SUPPORT){
                 $table->foreignId('father_id');
             }else {
                 $table->unsignedBigInteger('father_id');
-                $table->foreign('father_id');
             }
         });
     }
