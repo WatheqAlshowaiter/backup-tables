@@ -20,7 +20,7 @@ class BackupTablesService
      * @return bool
      * @throws Exception
      */
-    public function generateBackup($tablesToBackup)
+    public function generateBackup($tablesToBackup, $dataTimeText = 'Y_m_d_H_i_s')
     {
         $tablesToBackup = Arr::wrap($tablesToBackup);
 
@@ -30,7 +30,7 @@ class BackupTablesService
             return false;
         }
 
-        $result = $this->processBackup($tablesToBackup);
+        $result = $this->processBackup($tablesToBackup, $dataTimeText);
 
         $output = new ConsoleOutput;
 
@@ -51,16 +51,12 @@ class BackupTablesService
         return false;
     }
 
-    protected function processBackup(array $tablesToBackup = [])
+    protected function processBackup(array $tablesToBackup = [], $dateTimeFormat = 'Y_m_d_H_i_s')
     {
-        $currentDateTime = now()->format('Y_m_d_H_i_s');
+        $currentDateTime = now()->format($dateTimeFormat);
         $modelParent = "Illuminate\Database\Eloquent\Model";
 
         foreach ($tablesToBackup as $table) {
-
-            //if ($table instanceof \Illuminate\Database\Eloquent\Model) {
-            //    $table = $table->getTable();
-            //}
             $table = $this->convertModelToTableName($table, $modelParent);
 
             $newTableName = $table . '_backup_' . $currentDateTime;

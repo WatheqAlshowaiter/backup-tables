@@ -44,6 +44,21 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
     }
 
+    public function test_generate_single_table_backup_with_with_custom_format()
+    {
+        Carbon::setTestNow();
+        $tableName = 'fathers';
+        $customFormat = 'Y_d_m_H_i';
+
+        BackupTables::generateBackup($tableName, $customFormat);
+
+        $newTableName = $tableName.'_backup_'.now()->format($customFormat);
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+
+    }
+
+
     public function test_generate_single_table_backup_all_table_data()
     {
         Carbon::setTestNow();
