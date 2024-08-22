@@ -47,7 +47,7 @@ class BackupTablesService
         $currentDateTime = now()->format('Y_m_d_H_i_s');
 
         foreach ($tablesToBackup as $table) {
-            $newTableName = $table.'_backup_'.$currentDateTime;
+            $newTableName = $table . '_backup_' . $currentDateTime;
             $newTableName = str_replace(['-', ':'], '_', $newTableName);
 
             if (Schema::hasTable($newTableName)) {
@@ -56,7 +56,7 @@ class BackupTablesService
                 continue;
             }
 
-            if (! Schema::hasTable($table)) {
+            if (!Schema::hasTable($table)) {
                 $this->response[] = "Table `$table` is not exists. check the table name again";
 
                 continue;
@@ -90,12 +90,6 @@ class BackupTablesService
             'response' => $this->response,
             //'newCreatedTables' =>$this->response['newCreatedTables'],
         ];
-
-        function restoreTable($tableName, $backupName)
-        {
-            // todo
-        }
-
     }
 
     protected function backupTablesForSqlite($newTableName, $table)
