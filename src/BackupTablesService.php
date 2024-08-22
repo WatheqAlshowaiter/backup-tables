@@ -84,7 +84,7 @@ class BackupTablesService
                     $this->backupTablesForForSqlServer($newTableName, $table);
                     break;
                 default:
-                    throw Exception('NOT SUPPORTED DATABASE DRIVER');
+                    throw new \Exception('NOT SUPPORTED DATABASE DRIVER');
             }
             Schema::enableForeignKeyConstraints();
 
@@ -150,7 +150,15 @@ class BackupTablesService
 
     protected function backupTablesForForSqlServer($newTableName, $table)
     {
-        dd('sql server');
+        DB::statement(/**@lang TSQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+
+        $newCreatedTables[] = $newTableName;
+        $response[] = " Table '$table' cloned successfully.";
+
+        return [
+            'response' => $response,
+            'newCreatedTables' => $newCreatedTables,
+        ];
     }
 
     private function getMysqlVersion()
