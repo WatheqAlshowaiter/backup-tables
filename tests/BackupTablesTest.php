@@ -95,12 +95,14 @@ class BackupTablesTest extends TestCase
         BackupTables::backupTables($tableName);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+        $newTableName2 = $tableName2 . '_backup_' . now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
-        if (DB::getDriverName() == 'mysql') { // todo debugging
-            dump(Father::first()->first_name);
-        }
+
+        //if (DB::getDriverName() == 'mysql') { // todo debugging
+        //    dump(Father::first()->first_name);
+        //}
 
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
@@ -110,7 +112,10 @@ class BackupTablesTest extends TestCase
             //$this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
 
-        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($tableName2)->value('father_id')); // foreign key
+        BackupTables::backupTables($tableName2);
+        $this->assertTrue(Schema::hasTable($newTableName2));
+
+        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
 
     }
 

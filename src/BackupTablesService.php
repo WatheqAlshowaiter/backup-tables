@@ -84,7 +84,6 @@ class BackupTablesService
                     throw new \Exception('NOT SUPPORTED DATABASE DRIVER');
             }
             Schema::enableForeignKeyConstraints();
-
         }
 
         return [
@@ -147,9 +146,7 @@ class BackupTablesService
 
     protected function backupTablesForForSqlServer($newTableName, $table)
     {
-        Schema::disableForeignKeyConstraints();
         DB::statement(/**@lang TSQL*/"SELECT * INTO $newTableName FROM $table");
-        Schema::enableForeignKeyConstraints();
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
