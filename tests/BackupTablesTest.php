@@ -128,7 +128,7 @@ class BackupTablesTest extends TestCase
         ]);
 
         Son::create([
-            'father_id' => 1,
+            'father_id' => Father::value('id')
         ]);
 
         BackupTables::backupTables([$tableName, $tableName2]);
@@ -154,8 +154,8 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
     }
 
-    public function test_generate_multiple_models_backup()
-    {
-        $this->markTestSkipped();
-    }
+    //public function test_generate_multiple_models_backup()
+    //{
+    //    $this->markTestSkipped();
+    //}
 }
