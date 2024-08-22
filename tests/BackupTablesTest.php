@@ -20,7 +20,7 @@ class BackupTablesTest extends TestCase
     {
         $tableName = 'not_correct_table_name';
 
-        $this->assertFalse(BackupTables::backupTables($tableName));
+        $this->assertFalse(BackupTables::generateBackup($tableName));
     }
 
     public function test_return_when_table_string_empty()
@@ -28,8 +28,8 @@ class BackupTablesTest extends TestCase
         $emptyString = '';
         $emptyArray = [];
 
-        $this->assertFalse(BackupTables::backupTables($emptyString));
-        $this->assertFalse(BackupTables::backupTables($emptyArray));
+        $this->assertFalse(BackupTables::generateBackup($emptyString));
+        $this->assertFalse(BackupTables::generateBackup($emptyArray));
     }
 
     public function test_generate_single_table_backup_with_proper_name()
@@ -37,7 +37,7 @@ class BackupTablesTest extends TestCase
         Carbon::setTestNow();
 
         $tableName = 'fathers';
-        BackupTables::backupTables($tableName);
+        BackupTables::generateBackup($tableName);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
@@ -56,7 +56,7 @@ class BackupTablesTest extends TestCase
             'email' => 'father@email.com',
         ]);
 
-        BackupTables::backupTables($tableName);
+        BackupTables::generateBackup($tableName);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
@@ -92,7 +92,7 @@ class BackupTablesTest extends TestCase
             'father_id' => 1,
         ]);
 
-        BackupTables::backupTables($table1);
+        BackupTables::generateBackup($table1);
 
         $currentDateTime = now()->format('Y_m_d_H_i_s');
         $newTableName =  $table1 . '_backup_' . $currentDateTime;
@@ -105,7 +105,7 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newTableName)->value('email'));
 
         // Verify data in sons_backup table
-        BackupTables::backupTables($table2);
+        BackupTables::generateBackup($table2);
         $this->assertTrue(Schema::hasTable($newTableName2));
         $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newTableName2)->value('father_id'));
     }
@@ -127,7 +127,7 @@ class BackupTablesTest extends TestCase
             'father_id' => Father::value('id')
         ]);
 
-        BackupTables::backupTables([$tableName, $tableName2]);
+        BackupTables::generateBackup([$tableName, $tableName2]);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
         $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');

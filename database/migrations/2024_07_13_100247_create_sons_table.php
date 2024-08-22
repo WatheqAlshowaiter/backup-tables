@@ -11,7 +11,7 @@ class CreateSonsTable extends Migration
     public function up(): void
     {
         Schema::create('sons', function (Blueprint $table) {
-            $table->bigIncrements('id'); // primary key => ignored
+            $table->bigIncrements('id');
 
             if((float) App::version() >= Constants::VERSION_AFTER_FOREIGN_ID_SUPPORT){
                 $table->foreignId('father_id');

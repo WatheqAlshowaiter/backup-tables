@@ -2,6 +2,7 @@
 
 namespace WatheqAlshowaiter\BackupTables;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -11,7 +12,14 @@ class BackupTablesService
 {
     public array $response = [];
 
-    public function backupTables($tablesToBackup)
+    /**
+     * Generate backup for the given table or tables
+     *
+     * @param string|array $tablesToBackup
+     * @return bool
+     * @throws Exception
+     */
+    public function generateBackup($tablesToBackup)
     {
         $tablesToBackup = Arr::wrap($tablesToBackup);
 
@@ -71,8 +79,10 @@ class BackupTablesService
                     $this->backupTablesForSqlite($newTableName, $table);
                     break;
                 case 'mysql':
+                    $this->backupTablesForForMysql($newTableName, $table);
+                    break;
                 case 'mariadb':
-                    $this->backupTablesForForMysqlAndMariaDb($newTableName, $table);
+                    $this->backupTablesForForMariaDb($newTableName, $table);
                     break;
                 case 'pgsql':
                     $this->backupTablesForForPostgres($newTableName, $table);
@@ -81,7 +91,7 @@ class BackupTablesService
                     $this->backupTablesForForSqlServer($newTableName, $table);
                     break;
                 default:
-                    throw new \Exception('NOT SUPPORTED DATABASE DRIVER');
+                    throw new Exception('NOT SUPPORTED DATABASE DRIVER');
             }
             Schema::enableForeignKeyConstraints();
         }
@@ -110,7 +120,7 @@ class BackupTablesService
         ];
     }
 
-        protected function backupTablesForForMysqlAndMariaDb($newTableName, $table)
+    protected function backupTablesForForMysql($newTableName, $table)
     {
         DB::statement(/**@lang MySQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
@@ -122,6 +132,20 @@ class BackupTablesService
             'newCreatedTables' => $newCreatedTables,
         ];
     }
+
+    protected function backupTablesForForMariaDb($newTableName, $table)
+    {
+        DB::statement(/**@lang MariaDB*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+
+        $newCreatedTables[] = $newTableName;
+        $response[] = " Table '$table' cloned successfully.";
+
+        return [
+            'response' => $response,
+            'newCreatedTables' => $newCreatedTables,
+        ];
+    }
+
 
     protected function backupTablesForForPostgres($newTableName, $table)
     {
