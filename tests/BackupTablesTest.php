@@ -115,16 +115,6 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
     }
 
-    public function test_generate_shallow_table_backup()
-    {
-        $this->markTestSkipped();
-    }
-
-    public function test_generate_only_data_table_backup()
-    {
-        $this->markTestSkipped();
-    }
-
     public function test_generate_multiple_models_backup()
     {
         $this->markTestSkipped();
