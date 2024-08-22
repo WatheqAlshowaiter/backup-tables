@@ -44,7 +44,6 @@ class BackupTablesService
 
     protected function processBackup(array $tablesToBackup = [])
     {
-
         $currentDateTime = now()->format('Y_m_d_H_i_s');
 
         foreach ($tablesToBackup as $table) {
@@ -148,7 +147,7 @@ class BackupTablesService
 
     protected function backupTablesForForSqlServer($newTableName, $table)
     {
-        DB::statement(/**@lang TSQL**/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+        DB::statement("SELECT * INTO $newTableName FROM $table");
 
         $newCreatedTables[] = $newTableName;
         $response[] = " Table '$table' cloned successfully.";
