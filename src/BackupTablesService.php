@@ -17,10 +17,11 @@ class BackupTablesService
      * Generate backup for the given table or tables
      *
      * @param string|array $tablesToBackup
+     * @param string $dataTimeText
      * @return bool
      * @throws Exception
      */
-    public function generateBackup($tablesToBackup, $dataTimeText = 'Y_m_d_H_i_s')
+    public function generateBackup($tablesToBackup, string $dataTimeText = 'Y_m_d_H_i_s')
     {
         $tablesToBackup = Arr::wrap($tablesToBackup);
 
