@@ -11,7 +11,14 @@ class CreateSonsTable extends Migration
         Schema::create('sons', function (Blueprint $table) {
             $table->bigIncrements('id'); // primary key => ignored
             //$table->unsignedBigInteger('father_id');
-            $table->foreignId('father_id'); // todo stop foreign keys temp
+            //$table->foreignId('father_id'); // todo stop foreign keys temp
+
+            if((float) \Illuminate\Support\Facades\App::version() >= \WatheqAlshowaiter\BackupTables\Constants::VERSION_AFTER_FOREIGN_ID_SUPPORT){
+                $table->foreignId('father_id');
+            }else {
+                $table->unsignedBigInteger('father_id');
+                $table->foreign('father_id');
+            }
         });
     }
 
