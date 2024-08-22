@@ -92,7 +92,7 @@ class BackupTablesTest extends TestCase
             'father_id' => 1,
         ]);
 
-        BackupTables::backupTables([$tableName2, $tableName]);
+        BackupTables::backupTables([$tableName, $tableName2]);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
         $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
