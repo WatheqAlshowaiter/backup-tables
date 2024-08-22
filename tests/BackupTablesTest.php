@@ -66,12 +66,12 @@ class BackupTablesTest extends TestCase
             dump(Father::first()->first_name);
         }
 
-        $this->assertEquals(Father::first()->first_name, DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(Father::first()->email, DB::table($newTableName)->value('email'));
+        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
     }
 
@@ -104,15 +104,15 @@ class BackupTablesTest extends TestCase
             dump(Father::first()->first_name);
         }
 
-        $this->assertEquals(Father::first()->first_name, DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(Father::first()->email, DB::table($newTableName)->value('email'));
+        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(Father::value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            $this->assertEquals(Father::value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
 
-        $this->assertEquals(Son::value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
     }
 
     public function test_generate_shallow_table_backup()
