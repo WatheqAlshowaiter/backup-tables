@@ -10,8 +10,8 @@ class CreateSonsTable extends Migration
     {
         Schema::create('sons', function (Blueprint $table) {
             $table->bigIncrements('id'); // primary key => ignored
-            $table->unsignedBigInteger('father_id');
-            $table->foreign('father_id')->references('id')->on('fathers'); // required
+            //$table->unsignedBigInteger('father_id');
+            $table->foreignId('father_id'); // todo stop foreign keys temp
         });
     }
 
