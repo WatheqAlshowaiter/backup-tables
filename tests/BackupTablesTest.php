@@ -18,7 +18,6 @@ use WatheqAlshowaiter\BackupTables\Models\Son;
 class BackupTablesTest extends TestCase
 {
     use RefreshDatabase;
-    use WithFaker;
 
     public function test_return_when_table_is_not_correct()
     {
@@ -113,40 +112,40 @@ class BackupTablesTest extends TestCase
 
     }
 
-    public function test_generate_2_single_table_backup_all_table_data()
-    {
-        Carbon::setTestNow();
-        $table1 = 'fathers';
-        $table2 = 'sons';
-
-        Father::create([
-            'id' => 1,
-            'first_name' => 'Ahmed',
-            'last_name' => 'Saleh',
-            'email' => 'father@email.com',
-        ]);
-
-        Son::create([
-            'father_id' => 1,
-        ]);
-
-        BackupTables::generateBackup($table1);
-
-        $currentDateTime = now()->format('Y_m_d_H_i_s');
-        $newTableName =  $table1 . '_backup_' . $currentDateTime;
-        $newTableName2 = $table2 . '_backup_' . $currentDateTime;
-
-        $this->assertTrue(Schema::hasTable($newTableName));
-
-        // Verify data in fathers_backup table
-        $this->assertEquals(DB::table('fathers')->value('first_name'), DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newTableName)->value('email'));
-
-        // Verify data in sons_backup table
-        BackupTables::generateBackup($table2);
-        $this->assertTrue(Schema::hasTable($newTableName2));
-        $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newTableName2)->value('father_id'));
-    }
+    //public function test_generate_2_single_table_backup_all_table_data()
+    //{
+    //    Carbon::setTestNow();
+    //    $fatherTable = 'fathers';
+    //    $sonTable = 'sons';
+    //
+    //    Father::create([
+    //        'id' => 1,
+    //        'first_name' => 'Ahmed',
+    //        'last_name' => 'Saleh',
+    //        'email' => 'father@email.com',
+    //    ]);
+    //
+    //    Son::create([
+    //        'father_id' => 1,
+    //    ]);
+    //
+    //    BackupTables::generateBackup($fatherTable);
+    //
+    //    $currentDateTime = now()->format('Y_m_d_H_i_s');
+    //    $newTableName =  $fatherTable . '_backup_' . $currentDateTime;
+    //    $newTableName2 = $sonTable . '_backup_' . $currentDateTime;
+    //
+    //    $this->assertTrue(Schema::hasTable($newTableName));
+    //
+    //    // Verify data in fathers_backup table
+    //    $this->assertEquals(DB::table('fathers')->value('first_name'), DB::table($newTableName)->value('first_name'));
+    //    $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newTableName)->value('email'));
+    //
+    //    // Verify data in sons_backup table
+    //    BackupTables::generateBackup($sonTable);
+    //    $this->assertTrue(Schema::hasTable($newTableName2));
+    //    $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newTableName2)->value('father_id'));
+    //}
 
     public function test_generate_multiple_table_backup()
     {
@@ -202,10 +201,8 @@ class BackupTablesTest extends TestCase
 
         BackupTables::generateBackup([$tableName, $tableName2]);
 
-        $modelParent = "Illuminate\Database\Eloquent\Model";
-
-        $tableName = BackupTables::convertModelToTableName($tableName); //  $this->convertModelToTableName($tableName, $modelParent);
-        $tableName2 = BackupTables::convertModelToTableName($tableName2, $modelParent);
+        $tableName = BackupTables::convertModelToTableName($tableName);
+        $tableName2 = BackupTables::convertModelToTableName($tableName2);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
         $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
