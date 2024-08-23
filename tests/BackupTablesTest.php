@@ -89,7 +89,6 @@ class BackupTablesTest extends TestCase
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            //$this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
     }
 
@@ -215,7 +214,7 @@ class BackupTablesTest extends TestCase
         $modelParent = "Illuminate\Database\Eloquent\Model";
 
         $tableName = BackupTables::convertModelToTableName($tableName); //  $this->convertModelToTableName($tableName, $modelParent);
-        $tableName2 = $this->convertModelToTableName($tableName2, $modelParent);
+        $tableName2 = BackupTables::convertModelToTableName($tableName2, $modelParent);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
         $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
@@ -236,15 +235,5 @@ class BackupTablesTest extends TestCase
         }
 
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
-    }
-
-    public function convertModelToTableName($table, string $modelParent)
-    {
-        if (class_exists($table)) {
-            if (is_subclass_of($table, $modelParent)) {
-                $table = (new $table)->getTable();
-            }
-        }
-        return $table;
     }
 }

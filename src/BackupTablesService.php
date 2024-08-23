@@ -32,22 +32,26 @@ class BackupTablesService
 
         $result = $this->processBackup($tablesToBackup, $dataTimeText);
 
+        //dump($result);
         $output = new ConsoleOutput;
-
 
         foreach ($result['response'] as $message) {
             $output->writeln($message);
         }
 
-        if (! empty($result['newCreatedTables'])) {
-            $output->writeln('All tables completed backup successfully..');
-            $output->writeln('Newly created tables:');
-            foreach ($result['newCreatedTables'] as $tableName) {
-                $output->writeln($tableName);
-            }
-
+        if(! empty(data_get($result, 'response.0.newCreatedTables'))){
             return true;
         }
+
+        //if (! empty($result ['response'][0]['newCreatedTables'])) {
+        //    $output->writeln('All tables completed backup successfully..');
+        //    $output->writeln('Newly created tables:');
+        //    foreach ($result['response'][0]['newCreatedTables'] as $tableName) {
+        //        $output->writeln($tableName);
+        //    }
+        //
+        //    return true;
+        //}
 
         return false;
     }
@@ -59,8 +63,7 @@ class BackupTablesService
         foreach ($tablesToBackup as $table) {
             $table = $this->convertModelToTableName($table);
 
-            $newTableName = $table . '_backup_' . $currentDateTime;
-            $newTableName = str_replace(['-', ':'], '_', $newTableName);
+            $newTableName = $this->buildBackupFilename($table, $currentDateTime);
 
             if (Schema::hasTable($newTableName)) {
                 $this->response[] = "Table '$newTableName' already exists. Skipping backup for '$table'.";
@@ -83,16 +86,16 @@ class BackupTablesService
                     $this->response[] = $this->backupTablesForSqlite($newTableName, $table);
                     break;
                 case 'mysql':
-                    $this->backupTablesForForMysql($newTableName, $table);
+                    $this->response[] = $this->backupTablesForForMysql($newTableName, $table);
                     break;
                 case 'mariadb':
-                    $this->backupTablesForForMariaDb($newTableName, $table);
+                    $this->response[] = $this->backupTablesForForMariaDb($newTableName, $table);
                     break;
                 case 'pgsql':
-                    $this->backupTablesForForPostgres($newTableName, $table);
+                    $this->response[] = $this->backupTablesForForPostgres($newTableName, $table);
                     break;
                 case 'sqlsrv':
-                    $this->backupTablesForForSqlServer($newTableName, $table);
+                    $this->response[] = $this->backupTablesForForSqlServer($newTableName, $table);
                     break;
                 default:
                     throw new Exception('NOT SUPPORTED DATABASE DRIVER');
@@ -100,12 +103,8 @@ class BackupTablesService
             Schema::enableForeignKeyConstraints();
         }
 
-        //return $this->response; // tested later
-
-
         return [
             'response' => $this->response,
-            //'newCreatedTables' =>$this->response['newCreatedTables'],
         ];
     }
 
@@ -167,12 +166,27 @@ class BackupTablesService
      */
     public function returnedBackupResponse($newTableName, $table): array
     {
-        $newCreatedTables[] = $newTableName;
-        $response[] = " Table '$table' completed backup successfully.";
-
-        return [
-            'response' => $response,
-            'newCreatedTables' => $newCreatedTables,
+        //dd($this->response);
+        //Arr::forget('');
+        //if($this->response[0])
+        $result =  [
+            'response' => "Table '$table' completed backup successfully.",
+            'newCreatedTables' => "Newly created table: $newTableName",
         ];
+
+        Arr::forget($this->response, '0');
+
+        return $result;
+    }
+
+    /**
+     * @param string $table
+     * @param string $currentDateTime
+     * @return array|string|string[]
+     */
+    private function buildBackupFilename(string $table, string $currentDateTime)
+    {
+        $newTableName = $table . '_backup_' . $currentDateTime;
+        return str_replace(['-', ':'], '_', $newTableName);
     }
 }
