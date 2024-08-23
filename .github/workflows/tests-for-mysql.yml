@@ -7,6 +7,7 @@ on:
       - ".github/workflows/tests-for-laravel-versions.yml"
       - ".github/workflows/tests-for-databases.yml"
       - ".github/workflows/test-for-mariadb.yml"
+      - ".github/workflows/tests-for-mysql.yml"
       - "phpunit.xml.dist"
       - "composer.json"
       - "composer.lock"
