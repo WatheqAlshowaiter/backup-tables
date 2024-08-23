@@ -77,11 +77,12 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
-        // Debugging output to inspect the contents of the backup table
-        if (DB::getDriverName() == 'mysql') {
-            $backupData = DB::table($newTableName)->get();
-            dump($backupData);
-        }
+        // todo Debugging output to inspect the contents of the backup table
+        $backupData = DB::table($newTableName)->get();
+        dump([
+            DB::getDriverName(),
+            $backupData
+        ]);
 
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));

@@ -107,7 +107,8 @@ class BackupTablesService
 
     protected function backupTablesForForMysql($newTableName, $table): array
     {
-        DB::statement(/**@lang MySQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+        DB::statement(/**@lang MySQL*/ "CREATE TABLE $newTableName LIKE $table");
+        DB::statement(/**@lang MySQL*/"INSERT INTO $newTableName SELECT * FROM $table");
 
         return $this->returnedBackupResponse($newTableName, $table);
     }
