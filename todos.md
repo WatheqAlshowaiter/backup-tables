@@ -10,8 +10,9 @@
 - [x] improve namings for method names
 - [x] write automated tests for the code, 
 - [x] fix duplicate console `Table 'fathers' completed backup successfully.` when use `test_generate_2_single_table_backup_all_table_data`
-- [ ] add database drop list (sqlite, mysql, sql server, mariadb, postgres) + version for each of them in the ISSUE_TEMPLATE, and make it required and even add it to the next
-- [ ] extract `mysql 8`, `mysql 5.7` and `mariadb` in separate github actions if the still conflicts with each other and works fine alone. 
+- [x] add database drop list (sqlite, mysql, sql server, mariadb, postgres) + version for each of them in the ISSUE_TEMPLATE, and make it required and even add it to the next
+- [ ] extract `mysql 8`, `mysql 5.7` and `mariadb` in separate GitHub actions if the still conflicts with each other and works fine alone. 
+- [ ] return back pint formatting GitHub actions
 - [ ] check the console output when backup is correct and make in tests (prefer)
 - [ ] fix for foreign keys, and return foreign key father_id 
 - [ ] clean up the code
