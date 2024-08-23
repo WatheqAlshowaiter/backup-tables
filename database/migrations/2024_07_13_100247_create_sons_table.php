@@ -13,11 +13,14 @@ class CreateSonsTable extends Migration
         Schema::create('sons', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            if((float) App::version() >= Constants::VERSION_AFTER_FOREIGN_ID_SUPPORT){
-                $table->foreignId('father_id');
-            }else {
-                $table->unsignedBigInteger('father_id');
-            }
+            $table->unsignedBigInteger('father_id');
+            $table->foreign('father_id')->references('id')->on('fathers');
+            //
+            //if((float) App::version() >= Constants::VERSION_AFTER_FOREIGN_ID_SUPPORT){
+            //    $table->foreignId('father_id');
+            //}else {
+            //    $table->unsignedBigInteger('father_id');
+            //}
         });
     }
 
