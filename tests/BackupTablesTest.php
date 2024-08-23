@@ -80,10 +80,6 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
-        if (DB::getDriverName() == 'mysql') { // todo debugging
-            dump(Father::first()->first_name);
-        }
-
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
@@ -177,16 +173,11 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
         $this->assertTrue(Schema::hasTable($newTableName2));
 
-        if (DB::getDriverName() == 'mysql') { // todo debugging
-            dump(Father::first()->first_name);
-        }
-
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            //$this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // todo remove if not needed
         }
 
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
@@ -222,16 +213,11 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
         $this->assertTrue(Schema::hasTable($newTableName2));
 
-        if (DB::getDriverName() == 'mysql') { // todo debugging
-            dump(Father::first()->first_name);
-        }
-
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-            //$this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // todo remove if not needed
         }
 
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key

@@ -45,24 +45,24 @@ And More Customizations
 - You can use an array to backup more than one table
 
 ```php
- BackupTables::backupTables(['users', 'posts']); 
- // users_backup_2024_08_22_17_40_01
- // posts_backup_2024_08_22_17_40_01 
+BackupTables::backupTables(['users', 'posts']); 
+// users_backup_2024_08_22_17_40_01
+// posts_backup_2024_08_22_17_40_01 
 ```
 
 - Or add Classes as parameters, It will backup their tables
 
 ```php
- BackupTables::backupTables(User::class); // users_backup_2024_08_22_17_40_01
+BackupTables::backupTables(User::class); // users_backup_2024_08_22_17_40_01
 // or
- BackupTables::backupTables([User::class, Post:class]); // users_backup_2024_08_22_17_40_01, posts_backup_2024_08_22_17_40_01 
+BackupTables::backupTables([User::class, Post:class]); // users_backup_2024_08_22_17_40_01, posts_backup_2024_08_22_17_40_01 
  
 ```
 
 - You can customize the $dataTime format to whatever you want
 
 ```php
- BackupTables::backupTables(`users', 'Y_d_m_H_i'); // users_backup_2024_22_08_17_40
+BackupTables::backupTables(`users', 'Y_d_m_H_i'); // users_backup_2024_22_08_17_40
 ```
 
 > *Note: be aware if you customize the datetime to wide datetime the package will check the backup datetime file and
@@ -71,8 +71,8 @@ And More Customizations
 > For example: if you use this `Y_d_m_H` you can not generate the same backup in the same hour
 
 ```php
- BackupTables::backupTables(`users', 'Y_d_m_H'); // can not generate the same backup in the same hour!
- BackupTables::backupTables(`users', 'Y_d_m'); // can not generate the same backup in the same day!
+BackupTables::backupTables(`users', 'Y_d_m_H'); // can not generate the same backup in the same hour
+BackupTables::backupTables(`users', 'Y_d_m'); // can not generate the same backup in the same day
 ```
 
 ## Why?

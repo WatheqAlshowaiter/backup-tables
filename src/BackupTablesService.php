@@ -32,7 +32,6 @@ class BackupTablesService
 
         $result = $this->processBackup($tablesToBackup, $dataTimeText);
 
-        //dump($result);
         $output = new ConsoleOutput;
 
         foreach ($result['response'] as $message) {
@@ -42,16 +41,6 @@ class BackupTablesService
         if(! empty(data_get($result, 'response.0.newCreatedTables'))){
             return true;
         }
-
-        //if (! empty($result ['response'][0]['newCreatedTables'])) {
-        //    $output->writeln('All tables completed backup successfully..');
-        //    $output->writeln('Newly created tables:');
-        //    foreach ($result['response'][0]['newCreatedTables'] as $tableName) {
-        //        $output->writeln($tableName);
-        //    }
-        //
-        //    return true;
-        //}
 
         return false;
     }
@@ -166,14 +155,12 @@ class BackupTablesService
      */
     public function returnedBackupResponse($newTableName, $table): array
     {
-        //dd($this->response);
-        //Arr::forget('');
-        //if($this->response[0])
         $result =  [
             'response' => "Table '$table' completed backup successfully.",
             'newCreatedTables' => "Newly created table: $newTableName",
         ];
 
+        // to prevent duplicating message if you use generateBackup() twice in the same request event for different tables
         Arr::forget($this->response, '0');
 
         return $result;
