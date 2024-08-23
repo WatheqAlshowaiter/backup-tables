@@ -177,4 +177,9 @@ class BackupTablesService
         $newTableName = $table . '_backup_' . $currentDateTime;
         return str_replace(['-', ':'], '_', $newTableName);
     }
+
+    private function getMysqlVersion(): float
+    {
+        return (float)DB::select('select version()')[0]->{'version()'};
+    }
 }
