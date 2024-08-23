@@ -7,19 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use WatheqAlshowaiter\BackupTables\Constants;
 
-/**
- * @deprecated
- */
 class CreateMothersTable extends Migration
 {
     public function up(): void
     {
         Schema::create('mothers', function (Blueprint $table) {
-            if ((float) App::version() >= Constants::VERSION_AFTER_ULID_SUPPORT && DB::connection()->getDriverName() !== 'sqlsrv') {
-                $table->ulid('id')->primary(); // primary key => ignored
-            } else {
-                $table->bigIncrements('id'); // primary key => ignored
-            }
+            $table->bigIncrements('id'); // primary key => ignored
 
             $table->enum('types', ['one', 'two'])->default('one'); // default => ignored
 
