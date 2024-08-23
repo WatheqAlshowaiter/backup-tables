@@ -60,32 +60,31 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
     }
 
+    public function test_generate_single_table_backup_all_table_data()
+    {
+        Carbon::setTestNow();
+        $tableName = 'fathers';
 
-    //public function test_generate_single_table_backup_all_table_data()
-    //{
-    //    Carbon::setTestNow();
-    //    $tableName = 'fathers';
-    //
-    //    Father::create([
-    //        'id' => 1,
-    //        'first_name' => 'Ahmed',
-    //        'last_name' => 'Saleh',
-    //        'email' => 'father@email.com',
-    //    ]);
-    //
-    //    BackupTables::generateBackup($tableName);
-    //
-    //    $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-    //
-    //    $this->assertTrue(Schema::hasTable($newTableName));
-    //
-    //    $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
-    //    $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
-    //
-    //    if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-    //        $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-    //    }
-    //}
+        Father::create([
+            'id' => 1,
+            'first_name' => 'Ahmed',
+            'last_name' => 'Saleh',
+            'email' => 'father@email.com',
+        ]);
+
+        BackupTables::generateBackup($tableName);
+
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+
+        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
+
+        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+        }
+    }
 
 
     public function test_generate_single_table_backup_with_different_data()
