@@ -27,11 +27,7 @@ class CreateMothersTable extends Migration
                 $table->string('ulid'); // required
             }
 
-            if (DB::connection()->getDriverName() === 'mariadb') {
-                $table->json('description')->nullable();
-            } else {
-                $table->text('description')->nullable();
-            }
+            $table->text('description')->nullable();
         });
     }
 
