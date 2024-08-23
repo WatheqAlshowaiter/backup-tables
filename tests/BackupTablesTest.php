@@ -4,7 +4,6 @@ namespace WatheqAlshowaiter\BackupTables\Tests;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -77,6 +76,12 @@ class BackupTablesTest extends TestCase
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
+
+        // Debugging output to inspect the contents of the backup table
+        if (DB::getDriverName() == 'mysql') {
+            $backupData = DB::table($newTableName)->get();
+            dd($backupData);
+        }
 
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
