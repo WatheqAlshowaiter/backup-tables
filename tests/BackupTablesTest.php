@@ -112,40 +112,38 @@ class BackupTablesTest extends TestCase
 
     }
 
-    //public function test_generate_2_single_table_backup_all_table_data()
-    //{
-    //    Carbon::setTestNow();
-    //    $fatherTable = 'fathers';
-    //    $sonTable = 'sons';
-    //
-    //    Father::create([
-    //        'id' => 1,
-    //        'first_name' => 'Ahmed',
-    //        'last_name' => 'Saleh',
-    //        'email' => 'father@email.com',
-    //    ]);
-    //
-    //    Son::create([
-    //        'father_id' => 1,
-    //    ]);
-    //
-    //    BackupTables::generateBackup($fatherTable);
-    //
-    //    $currentDateTime = now()->format('Y_m_d_H_i_s');
-    //    $newTableName =  $fatherTable . '_backup_' . $currentDateTime;
-    //    $newTableName2 = $sonTable . '_backup_' . $currentDateTime;
-    //
-    //    $this->assertTrue(Schema::hasTable($newTableName));
-    //
-    //    // Verify data in fathers_backup table
-    //    $this->assertEquals(DB::table('fathers')->value('first_name'), DB::table($newTableName)->value('first_name'));
-    //    $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newTableName)->value('email'));
-    //
-    //    // Verify data in sons_backup table
-    //    BackupTables::generateBackup($sonTable);
-    //    $this->assertTrue(Schema::hasTable($newTableName2));
-    //    $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newTableName2)->value('father_id'));
-    //}
+    public function test_generate_2_single_table_backup_all_table_data()
+    {
+        Carbon::setTestNow();
+        $fatherTable = 'fathers';
+        $sonTable = 'sons';
+
+        Father::create([
+            'id' => 1,
+            'first_name' => 'Ahmed',
+            'last_name' => 'Saleh',
+            'email' => 'father@email.com',
+        ]);
+
+        Son::create([
+            'father_id' => 1,
+        ]);
+
+        BackupTables::generateBackup($fatherTable);
+
+        $currentDateTime = now()->format('Y_m_d_H_i_s');
+        $newTableName =  $fatherTable . '_backup_' . $currentDateTime;
+        $newTableName2 = $sonTable . '_backup_' . $currentDateTime;
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+
+        $this->assertEquals(DB::table('fathers')->value('first_name'), DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newTableName)->value('email'));
+
+        BackupTables::generateBackup($sonTable);
+        $this->assertTrue(Schema::hasTable($newTableName2));
+        $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newTableName2)->value('father_id'));
+    }
 
     //public function test_generate_multiple_table_backup()
     //{
