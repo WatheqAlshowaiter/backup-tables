@@ -1,4 +1,4 @@
-name: tests-for-databases
+name: tests-for-mariadb
 
 on:
   push:
