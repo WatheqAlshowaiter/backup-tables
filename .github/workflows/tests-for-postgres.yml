@@ -9,6 +9,7 @@ on:
       - ".github/workflows/tests-for-postgres.yml"
       - ".github/workflows/test-for-mariadb.yml"
       - ".github/workflows/tests-for-mysql.yml"
+      - ".github/workflows/tests-for-mysql8.yml"
       - "phpunit.xml.dist"
       - "composer.json"
       - "composer.lock"

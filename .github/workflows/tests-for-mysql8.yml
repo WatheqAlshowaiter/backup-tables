@@ -1,4 +1,4 @@
-name: tests-for-mariadb
+name: tests-for-mysql8
 
 on:
   push:
@@ -16,23 +16,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  mariadb:
+  mysql_8:
     runs-on: ubuntu-24.04
 
     services:
-      mariadb:
-        image: mariadb:10
+      mysql:
+        image: mysql:8
         env:
-          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
-          MARIADB_DATABASE: laravel
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: laravel
         ports:
           - 3306:3306
-        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     strategy:
       fail-fast: true
 
-    name: MariaDB 10
+    name: MySQL 8
 
     steps:
       - name: Checkout code
@@ -59,4 +59,4 @@ jobs:
       - name: Execute tests
         run: vendor/bin/phpunit
         env:
-          DB_CONNECTION: mariadb
+          DB_CONNECTION: mysql
