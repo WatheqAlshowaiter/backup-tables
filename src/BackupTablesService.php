@@ -3,7 +3,6 @@
 namespace WatheqAlshowaiter\BackupTables;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -21,12 +20,12 @@ class BackupTablesService
      * @return bool
      * @throws Exception
      */
-    public function generateBackup($tablesToBackup, string $dataTimeText = 'Y_m_d_H_i_s')
+    public function generateBackup($tablesToBackup, string $dataTimeText = 'Y_m_d_H_i_s'): bool
     {
         $tablesToBackup = Arr::wrap($tablesToBackup);
 
         if (empty($tablesToBackup)) {
-            $this->response[] = 'No tables specified to clone.';
+            $this->response[] = 'No tables specified to backup.';
 
             return false;
         }
@@ -35,12 +34,13 @@ class BackupTablesService
 
         $output = new ConsoleOutput;
 
+
         foreach ($result['response'] as $message) {
             $output->writeln($message);
         }
 
         if (! empty($result['newCreatedTables'])) {
-            $output->writeln('All tables cloned successfully ..');
+            $output->writeln('All tables completed backup successfully..');
             $output->writeln('Newly created tables:');
             foreach ($result['newCreatedTables'] as $tableName) {
                 $output->writeln($tableName);
@@ -52,20 +52,18 @@ class BackupTablesService
         return false;
     }
 
-    protected function processBackup(array $tablesToBackup = [], $dateTimeFormat = 'Y_m_d_H_i_s')
+    protected function processBackup(array $tablesToBackup = [], $dateTimeFormat = 'Y_m_d_H_i_s'): array
     {
         $currentDateTime = now()->format($dateTimeFormat);
-        $modelParent = "Illuminate\Database\Eloquent\Model";
 
         foreach ($tablesToBackup as $table) {
-            $table = $this->convertModelToTableName($table, $modelParent);
+            $table = $this->convertModelToTableName($table);
 
             $newTableName = $table . '_backup_' . $currentDateTime;
             $newTableName = str_replace(['-', ':'], '_', $newTableName);
 
-
             if (Schema::hasTable($newTableName)) {
-                $this->response[] = "Table '$newTableName' already exists. Skipping cloning for '$table'.";
+                $this->response[] = "Table '$newTableName' already exists. Skipping backup for '$table'.";
 
                 continue;
             }
@@ -82,7 +80,7 @@ class BackupTablesService
 
             switch ($databaseDriver) {
                 case 'sqlite':
-                    $this->backupTablesForSqlite($newTableName, $table);
+                    $this->response[] = $this->backupTablesForSqlite($newTableName, $table);
                     break;
                 case 'mysql':
                     $this->backupTablesForForMysql($newTableName, $table);
@@ -102,92 +100,58 @@ class BackupTablesService
             Schema::enableForeignKeyConstraints();
         }
 
+        //return $this->response; // tested later
+
+
         return [
             'response' => $this->response,
             //'newCreatedTables' =>$this->response['newCreatedTables'],
         ];
     }
 
-    protected function backupTablesForSqlite($newTableName, $table)
+    protected function backupTablesForSqlite($newTableName, $table): array
     {
-
-        // Step 1: Create the new table structure, excluding generated columns
         DB::statement(/**@lang SQLite */ "CREATE TABLE $newTableName AS SELECT * FROM $table WHERE 1=0;");
-
-        //$allColumns = DB::selectOne(/**@lang SQLite* */ "select * from $table");
-
         DB::statement(/**@lang SQLite */ "INSERT INTO $newTableName SELECT * FROM $table");
 
-        $newCreatedTables[] = $newTableName;
-        $response[] = " Table '$table' cloned successfully.";
-
-
-        return [
-            'response' => $response,
-            'newCreatedTables' => $newCreatedTables,
-        ];
+        return $this->returnedBackupResponse($newTableName, $table);
     }
 
-    protected function backupTablesForForMysql($newTableName, $table)
+    protected function backupTablesForForMysql($newTableName, $table): array
     {
         DB::statement(/**@lang MySQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
-        $newCreatedTables[] = $newTableName;
-        $response[] = " Table '$table' cloned successfully.";
-
-        return [
-            'response' => $response,
-            'newCreatedTables' => $newCreatedTables,
-        ];
+        return $this->returnedBackupResponse($newTableName, $table);
     }
 
-    protected function backupTablesForForMariaDb($newTableName, $table)
+    protected function backupTablesForForMariaDb($newTableName, $table): array
     {
         DB::statement(/**@lang MariaDB*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
-        $newCreatedTables[] = $newTableName;
-        $response[] = " Table '$table' cloned successfully.";
-
-        return [
-            'response' => $response,
-            'newCreatedTables' => $newCreatedTables,
-        ];
+        return $this->returnedBackupResponse($newTableName, $table);
     }
 
-
-    protected function backupTablesForForPostgres($newTableName, $table)
+    protected function backupTablesForForPostgres($newTableName, $table): array
     {
         DB::statement(/**@lang PostgreSQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
 
-        $newCreatedTables[] = $newTableName;
-        $response[] = " Table '$table' cloned successfully.";
-
-        return [
-            'response' => $response,
-            'newCreatedTables' => $newCreatedTables,
-        ];
+        return $this->returnedBackupResponse($newTableName, $table);
     }
 
-    protected function backupTablesForForSqlServer($newTableName, $table)
+    protected function backupTablesForForSqlServer($newTableName, $table): array
     {
         DB::statement(/**@lang TSQL*/"SELECT * INTO $newTableName FROM $table");
 
-        $newCreatedTables[] = $newTableName;
-        $response[] = " Table '$table' cloned successfully.";
-
-        return [
-            'response' => $response,
-            'newCreatedTables' => $newCreatedTables,
-        ];
+        return $this->returnedBackupResponse($newTableName, $table);
     }
 
     /**
      * @param $table
-     * @param string $modelParent
-     * @return mixed|string
+     * @return string
      */
-    public function convertModelToTableName($table, string $modelParent)
+    public function convertModelToTableName($table): string
     {
+        $modelParent = "Illuminate\Database\Eloquent\Model";
         if (class_exists($table)) {
             if (is_subclass_of($table, $modelParent)) {
                 $table = (new $table)->getTable();
@@ -196,12 +160,19 @@ class BackupTablesService
         return $table;
     }
 
-    private function getMysqlVersion()
+    /**
+     * @param $newTableName
+     * @param $table
+     * @return array[]
+     */
+    public function returnedBackupResponse($newTableName, $table): array
     {
-        return (float) DB::select('select version()')[0]->{'version()'};
-    }
-    function hasParents($object) {
-        return (bool)class_parents($object);
-    }
+        $newCreatedTables[] = $newTableName;
+        $response[] = " Table '$table' completed backup successfully.";
 
+        return [
+            'response' => $response,
+            'newCreatedTables' => $newCreatedTables,
+        ];
+    }
 }

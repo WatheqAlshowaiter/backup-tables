@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * public function backupTables($tablesToBackup = []): bool
  * protected function processBackup(array $tablesToBackup = []): array
+ * public function convertModelToTableName($table): string
  */
 class BackupTables extends Facade
 {

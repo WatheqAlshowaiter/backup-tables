@@ -4,17 +4,21 @@ namespace WatheqAlshowaiter\BackupTables\Tests;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use WatheqAlshowaiter\BackupTables\BackupTables;
 use WatheqAlshowaiter\BackupTables\Constants;
 use WatheqAlshowaiter\BackupTables\Models\Father;
+use WatheqAlshowaiter\BackupTables\Models\Mother;
 use WatheqAlshowaiter\BackupTables\Models\Son;
 
 class BackupTablesTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     public function test_return_when_table_is_not_correct()
     {
@@ -55,7 +59,6 @@ class BackupTablesTest extends TestCase
         $newTableName = $tableName.'_backup_'.now()->format($customFormat);
 
         $this->assertTrue(Schema::hasTable($newTableName));
-
     }
 
 
@@ -88,6 +91,31 @@ class BackupTablesTest extends TestCase
             $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
             //$this->assertEquals(DB::table($tableName)->value('status'), DB::table($newTableName)->value('status')); // virtualAs tables
         }
+    }
+
+    public function test_generate_single_table_backup_with_different_data()
+    {
+        Carbon::setTestNow();
+        $tableName = 'mothers';
+
+        Mother::create([
+            'types' => 'one',
+            'uuid' => Str::uuid(),
+            'ulid' => '01J5Y93TVJRVFCSRQFHHF2NRC4',
+            'description' => "{ar: 'some description'}"
+        ]);
+
+        BackupTables::generateBackup($tableName);
+
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+
+        $this->assertEquals(DB::table($tableName)->value('types'), DB::table($newTableName)->value('types'));
+        $this->assertEquals(DB::table($tableName)->value('uuid'), DB::table($newTableName)->value('uuid'));
+        $this->assertEquals(DB::table($tableName)->value('ulid'), DB::table($newTableName)->value('ulid'));
+        $this->assertEquals(DB::table($tableName)->value('description'), DB::table($newTableName)->value('description'));
+
     }
 
     public function test_generate_2_single_table_backup_all_table_data()
@@ -186,7 +214,7 @@ class BackupTablesTest extends TestCase
 
         $modelParent = "Illuminate\Database\Eloquent\Model";
 
-        $tableName = $this->convertModelToTableName($tableName, $modelParent);
+        $tableName = BackupTables::convertModelToTableName($tableName); //  $this->convertModelToTableName($tableName, $modelParent);
         $tableName2 = $this->convertModelToTableName($tableName2, $modelParent);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
