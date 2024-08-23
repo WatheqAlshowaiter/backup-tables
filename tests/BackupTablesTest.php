@@ -141,12 +141,27 @@ class BackupTablesTest extends TestCase
         $newFatherTable =  $fatherTable . '_backup_' . $currentDateTime;
         $newSonTable = $sonTable . '_backup_' . $currentDateTime;
 
+        // todo Debugging output to inspect the contents of the backup table
+        $backupData = DB::table($fatherTable)->get();
+        dump([
+            DB::getDriverName(),
+            $backupData
+        ]);
+
         $this->assertTrue(Schema::hasTable($newFatherTable));
 
         $this->assertEquals(DB::table('fathers')->value('first_name'), DB::table($newFatherTable)->value('first_name'));
         $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newFatherTable)->value('email'));
 
         BackupTables::generateBackup($sonTable);
+
+        // todo Debugging output to inspect the contents of the backup table
+        $backupData = DB::table($newSonTable)->get();
+        dump([
+            DB::getDriverName(),
+            $backupData
+        ]);
+
         $this->assertTrue(Schema::hasTable($newSonTable));
         $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newSonTable)->value('father_id'));
     }

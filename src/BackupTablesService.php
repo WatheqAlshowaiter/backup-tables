@@ -137,6 +137,7 @@ class BackupTablesService
         // Step 3: Insert data into the new table, excluding generated columns
         //DB::statement(/**@lang MySQL */ "INSERT INTO $newTableName ($columns) SELECT $columns FROM $table");
 
+        DB::statement(/**@lang PostgreSQL */ "CREATE TABLE $newTableName AS SELECT * FROM $table"); // todo for now
         return $this->returnedBackupResponse($newTableName, $table);
     }
 
