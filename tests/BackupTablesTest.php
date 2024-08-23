@@ -80,7 +80,7 @@ class BackupTablesTest extends TestCase
         // Debugging output to inspect the contents of the backup table
         if (DB::getDriverName() == 'mysql') {
             $backupData = DB::table($newTableName)->get();
-            dd($backupData);
+            dump($backupData);
         }
 
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
