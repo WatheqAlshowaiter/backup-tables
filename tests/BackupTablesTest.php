@@ -109,6 +109,13 @@ class BackupTablesTest extends TestCase
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
+        // todo Debugging output to inspect the contents of the backup table
+        $backupData = DB::table($newTableName)->get();
+        dump([
+            DB::getDriverName(),
+            $backupData
+        ]);
+
         $this->assertTrue(Schema::hasTable($newTableName));
 
         $this->assertEquals(DB::table($tableName)->value('types'), DB::table($newTableName)->value('types'));
@@ -125,7 +132,6 @@ class BackupTablesTest extends TestCase
         $sonTable = 'sons';
 
         $father = Father::create([
-            'id' => 1,
             'first_name' => 'Ahmed',
             'last_name' => 'Saleh',
             'email' => 'father@email.com',
