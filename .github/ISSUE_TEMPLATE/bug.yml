@@ -61,8 +61,6 @@ body:
         - MariaDB
         - PostgreSQL
         - SQL Server
-    validations:
-      required: true
   - type: input
     id: database-version
     attributes:
