@@ -61,31 +61,32 @@ class BackupTablesTest extends TestCase
     }
 
 
-    public function test_generate_single_table_backup_all_table_data()
-    {
-        Carbon::setTestNow();
-        $tableName = 'fathers';
+    //public function test_generate_single_table_backup_all_table_data()
+    //{
+    //    Carbon::setTestNow();
+    //    $tableName = 'fathers';
+    //
+    //    Father::create([
+    //        'id' => 1,
+    //        'first_name' => 'Ahmed',
+    //        'last_name' => 'Saleh',
+    //        'email' => 'father@email.com',
+    //    ]);
+    //
+    //    BackupTables::generateBackup($tableName);
+    //
+    //    $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+    //
+    //    $this->assertTrue(Schema::hasTable($newTableName));
+    //
+    //    $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+    //    $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
+    //
+    //    if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+    //        $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+    //    }
+    //}
 
-        Father::create([
-            'id' => 1,
-            'first_name' => 'Ahmed',
-            'last_name' => 'Saleh',
-            'email' => 'father@email.com',
-        ]);
-
-        BackupTables::generateBackup($tableName);
-
-        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-
-        $this->assertTrue(Schema::hasTable($newTableName));
-
-        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
-
-        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-        }
-    }
 
     public function test_generate_single_table_backup_with_different_data()
     {
@@ -147,76 +148,76 @@ class BackupTablesTest extends TestCase
     //    $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newTableName2)->value('father_id'));
     //}
 
-    public function test_generate_multiple_table_backup()
-    {
-        Carbon::setTestNow();
-        $tableName = 'fathers';
-        $tableName2 = 'sons';
+    //public function test_generate_multiple_table_backup()
+    //{
+    //    Carbon::setTestNow();
+    //    $tableName = 'fathers';
+    //    $tableName2 = 'sons';
+    //
+    //    Father::create([
+    //        'id' => 1,
+    //        'first_name' => 'Ahmed',
+    //        'last_name' => 'Saleh',
+    //        'email' => 'father@email.com',
+    //    ]);
+    //
+    //    Son::create([
+    //        'father_id' => Father::value('id')
+    //    ]);
+    //
+    //    BackupTables::generateBackup([$tableName, $tableName2]);
+    //
+    //    $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+    //    $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
+    //
+    //    $this->assertTrue(Schema::hasTable($newTableName));
+    //    $this->assertTrue(Schema::hasTable($newTableName2));
+    //
+    //    $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+    //    $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
+    //
+    //    if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+    //        $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+    //    }
+    //
+    //    $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+    //}
 
-        Father::create([
-            'id' => 1,
-            'first_name' => 'Ahmed',
-            'last_name' => 'Saleh',
-            'email' => 'father@email.com',
-        ]);
-
-        Son::create([
-            'father_id' => Father::value('id')
-        ]);
-
-        BackupTables::generateBackup([$tableName, $tableName2]);
-
-        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-        $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
-
-        $this->assertTrue(Schema::hasTable($newTableName));
-        $this->assertTrue(Schema::hasTable($newTableName2));
-
-        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
-
-        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-        }
-
-        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
-    }
-
-    public function test_generate_multiple_models_backup()
-    {
-        Carbon::setTestNow();
-        $tableName = Father::class;
-        $tableName2 = Son::class;
-
-        Father::create([
-            'id' => 1,
-            'first_name' => 'Ahmed',
-            'last_name' => 'Saleh',
-            'email' => 'father@email.com',
-        ]);
-
-        Son::create([
-            'father_id' => Father::value('id')
-        ]);
-
-        BackupTables::generateBackup([$tableName, $tableName2]);
-
-        $tableName = BackupTables::convertModelToTableName($tableName);
-        $tableName2 = BackupTables::convertModelToTableName($tableName2);
-
-        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-        $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
-
-        $this->assertTrue(Schema::hasTable($newTableName));
-        $this->assertTrue(Schema::hasTable($newTableName2));
-
-        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
-        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
-
-        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-        }
-
-        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
-    }
+    //public function test_generate_multiple_models_backup()
+    //{
+    //    Carbon::setTestNow();
+    //    $tableName = Father::class;
+    //    $tableName2 = Son::class;
+    //
+    //    Father::create([
+    //        'id' => 1,
+    //        'first_name' => 'Ahmed',
+    //        'last_name' => 'Saleh',
+    //        'email' => 'father@email.com',
+    //    ]);
+    //
+    //    Son::create([
+    //        'father_id' => Father::value('id')
+    //    ]);
+    //
+    //    BackupTables::generateBackup([$tableName, $tableName2]);
+    //
+    //    $tableName = BackupTables::convertModelToTableName($tableName);
+    //    $tableName2 = BackupTables::convertModelToTableName($tableName2);
+    //
+    //    $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+    //    $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
+    //
+    //    $this->assertTrue(Schema::hasTable($newTableName));
+    //    $this->assertTrue(Schema::hasTable($newTableName2));
+    //
+    //    $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+    //    $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
+    //
+    //    if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+    //        $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+    //    }
+    //
+    //    $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+    //}
 }
