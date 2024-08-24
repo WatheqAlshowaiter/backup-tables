@@ -41,7 +41,7 @@ class BackupTablesTest extends TestCase
     {
         dump([3 => __FUNCTION__]);
 
-        Carbon::setTestNow();
+        Carbon::setTestNow(now());
 
         $tableName = 'fathers';
         BackupTables::generateBackup($tableName);
@@ -62,6 +62,8 @@ class BackupTablesTest extends TestCase
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
         }
+
+        Carbon::setTestNow();
     }
 
 
