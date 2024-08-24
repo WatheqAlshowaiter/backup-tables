@@ -20,6 +20,7 @@ class BackupTablesTest extends TestCase
 
     public function test_return_when_table_is_not_correct()
     {
+        dump([1 => __FUNCTION__]);
         $tableName = 'not_correct_table_name';
 
         $this->assertFalse(BackupTables::generateBackup($tableName));
@@ -27,6 +28,8 @@ class BackupTablesTest extends TestCase
 
     public function test_return_when_table_string_empty()
     {
+        dump([2 => __FUNCTION__]);
+
         $emptyString = '';
         $emptyArray = [];
 
@@ -36,6 +39,8 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup_with_proper_name()
     {
+        dump([2 => __FUNCTION__]);
+
         Carbon::setTestNow();
 
         $tableName = 'fathers';
@@ -46,26 +51,15 @@ class BackupTablesTest extends TestCase
         $this->assertTrue(Schema::hasTable($newTableName));
     }
 
-    public function test_generate_single_table_backup_with_with_custom_format()
-    {
-        Carbon::setTestNow();
-        $tableName = 'fathers';
-        $customFormat = 'Y_d_m_H_i';
-
-        BackupTables::generateBackup($tableName, $customFormat);
-
-        $newTableName = $tableName.'_backup_'.now()->format($customFormat);
-
-        $this->assertTrue(Schema::hasTable($newTableName));
-    }
 
     public function test_generate_single_table_backup_all_table_data()
     {
+        dump([3=> __FUNCTION__]);
+
         Carbon::setTestNow();
         $tableName = 'fathers';
 
         Father::create([
-            'id' => 1,
             'first_name' => 'Ahmed',
             'last_name' => 'Saleh',
             'email' => 'father@email.com',
@@ -95,6 +89,8 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup_with_different_data()
     {
+        dump([4=> __FUNCTION__]);
+
         Carbon::setTestNow();
         $tableName = 'mothers';
 
@@ -127,6 +123,8 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_2_single_table_backup_all_table_data()
     {
+        dump([5 => __FUNCTION__]);
+
         Carbon::setTestNow();
         $fatherTable = 'fathers';
         $sonTable = 'sons';
@@ -172,43 +170,64 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newSonTable)->value('father_id'));
     }
 
-    //public function test_generate_multiple_table_backup()
-    //{
-    //    Carbon::setTestNow();
-    //    $tableName = 'fathers';
-    //    $tableName2 = 'sons';
-    //
-    //    Father::create([
-    //        'id' => 1,
-    //        'first_name' => 'Ahmed',
-    //        'last_name' => 'Saleh',
-    //        'email' => 'father@email.com',
-    //    ]);
-    //
-    //    Son::create([
-    //        'father_id' => Father::value('id')
-    //    ]);
-    //
-    //    BackupTables::generateBackup([$tableName, $tableName2]);
-    //
-    //    $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-    //    $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
-    //
-    //    $this->assertTrue(Schema::hasTable($newTableName));
-    //    $this->assertTrue(Schema::hasTable($newTableName2));
-    //
-    //    $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
-    //    $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
-    //
-    //    if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-    //        $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-    //    }
-    //
-    //    $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
-    //}
+    public function test_generate_multiple_table_backup()
+    {
+        dump([6 => __FUNCTION__]);
+
+        Carbon::setTestNow();
+        $tableName = 'fathers';
+        $tableName2 = 'sons';
+
+        Father::create([
+            'id' => 1,
+            'first_name' => 'Ahmed',
+            'last_name' => 'Saleh',
+            'email' => 'father@email.com',
+        ]);
+
+        Son::create([
+            'father_id' => Father::value('id')
+        ]);
+
+        BackupTables::generateBackup([$tableName, $tableName2]);
+
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+        $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+        $this->assertTrue(Schema::hasTable($newTableName2));
+
+        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
+
+        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+        }
+
+        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+    }
+
+
+
+    public function test_generate_single_table_backup_with_with_custom_format()
+    {
+        dump([7 => __FUNCTION__]);
+
+        Carbon::setTestNow();
+        $tableName = 'fathers';
+        $customFormat = 'Y_d_m_H_i';
+
+        BackupTables::generateBackup($tableName, $customFormat);
+
+        $newTableName = $tableName.'_backup_'.now()->format($customFormat);
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+    }
 
     //public function test_generate_multiple_models_backup()
     //{
+//dump([8 => __FUNCTION__]);
+
     //    Carbon::setTestNow();
     //    $tableName = Father::class;
     //    $tableName2 = Son::class;
@@ -244,4 +263,5 @@ class BackupTablesTest extends TestCase
     //
     //    $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
     //}
+
 }
