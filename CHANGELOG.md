@@ -2,6 +2,12 @@
 
 All notable changes to `backup-tables` will be documented in this file.
 
+## 1.2.0 - 2024-08-24
+
+Fix a some tests bugs
+
+**Full Changelog**: https://github.com/WatheqAlshowaiter/backup-tables/compare/1.0.1...1.2.0
+
 ## 1.0.1 - 2024-08-23
 
 **Full Changelog**: https://github.com/WatheqAlshowaiter/backup-tables/compare/1.0.0...1.0.1
