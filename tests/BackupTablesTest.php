@@ -149,7 +149,7 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newSonTable));
         $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newSonTable)->value('father_id'));
-        Carbon::setTestNow(now());
+        Carbon::setTestNow();
     }
 
     public function test_generate_multiple_table_backup()
@@ -197,7 +197,7 @@ class BackupTablesTest extends TestCase
     {
         dump([7 => __FUNCTION__]);
 
-        Carbon::setTestNow();
+        Carbon::setTestNow(now());
         $tableName = 'fathers';
         $customFormat = 'Y_d_m_H_i';
 
@@ -206,6 +206,8 @@ class BackupTablesTest extends TestCase
         $newTableName = $tableName.'_backup_'.now()->format($customFormat);
 
         $this->assertTrue(Schema::hasTable($newTableName));
+        Carbon::setTestNow();
+
     }
 
     //public function test_generate_multiple_models_backup()
