@@ -3,6 +3,7 @@
 namespace WatheqAlshowaiter\BackupTables\Tests;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -216,45 +217,103 @@ class BackupTablesTest extends TestCase
 
     }
 
-    //public function test_generate_multiple_models_backup()
-    //{
-//dump([8 => __FUNCTION__]);
+    public function test_generate_multiple_models_backup()
+    {
+        dump([8 => __FUNCTION__]);
 
-//$dateTime = Carbon::parse("2024-01-01 12:12:08");
-//Carbon::setTestNow($dateTime);
-    //    $tableName = Father::class;
-    //    $tableName2 = Son::class;
-    //
-    //    Father::create([
-    //        'id' => 1,
-    //        'first_name' => 'Ahmed',
-    //        'last_name' => 'Saleh',
-    //        'email' => 'father@email.com',
-    //    ]);
-    //
-    //    Son::create([
-    //        'father_id' => Father::value('id')
-    //    ]);
-    //
-    //    BackupTables::generateBackup([$tableName, $tableName2]);
-    //
-    //    $tableName = BackupTables::convertModelToTableName($tableName);
-    //    $tableName2 = BackupTables::convertModelToTableName($tableName2);
-    //
-    //    $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-    //    $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
-    //
-    //    $this->assertTrue(Schema::hasTable($newTableName));
-    //    $this->assertTrue(Schema::hasTable($newTableName2));
-    //
-    //    $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
-    //    $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
-    //
-    //    if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-    //        $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
-    //    }
-    //
-    //    $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
-    //}
+        $dateTime = Carbon::parse("2024-01-04 12:12:08");
+        Carbon::setTestNow($dateTime);
+        $tableName = Father::class;
+        $tableName2 = Son::class;
+
+        Father::create([
+            'id' => 1,
+            'first_name' => 'Ahmed',
+            'last_name' => 'Saleh',
+            'email' => 'father@email.com',
+        ]);
+
+        Son::create([
+            'father_id' => Father::value('id')
+        ]);
+
+        BackupTables::generateBackup([$tableName, $tableName2]);
+
+        $tableName = BackupTables::convertModelToTableName($tableName);
+        $tableName2 = BackupTables::convertModelToTableName($tableName2);
+
+        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
+        $newTableName2 = $tableName2 . '_backup_' . now()->format('Y_m_d_H_i_s');
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+        $this->assertTrue(Schema::hasTable($newTableName2));
+
+        $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
+        $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
+
+        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+        }
+
+        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+    }
+
+    public function test_skip_duplicated_backups()
+    {
+        dump([9 => __FUNCTION__]);
+
+        $dateTime = Carbon::parse("2024-01-05 12:12:08");
+        Carbon::setTestNow($dateTime);
+
+        $tableName = 'fathers';
+        BackupTables::generateBackup($tableName);
+        BackupTables::generateBackup($tableName); // another backup up will be skipped
+
+        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
+
+        $this->assertTrue(Schema::hasTable($newTableName));
+
+        $pattern = "{$tableName}_backup_%";
+        $databaseDriver = DB::getDriverName();
+        $count = 0;
+        switch ($databaseDriver) {
+            case 'mysql':
+                $result = DB::select("
+                SELECT COUNT(*) as count
+                FROM information_schema.tables
+                WHERE table_schema = DATABASE()
+                AND table_name LIKE ?", [$pattern]);
+                $count = $result[0]->count;
+                break;
+
+            case 'pgsql':
+                $result = DB::select("
+                SELECT COUNT(*) as count
+                FROM information_schema.tables
+                WHERE table_schema = 'public'
+                AND table_name LIKE ?", [$pattern]);
+                $count = $result[0]->count;
+                break;
+
+            case 'sqlite':
+                $count = DB::table('sqlite_master')
+                    ->where('type', 'table')
+                    ->where('name', 'like', $pattern)
+                    ->count();
+                break;
+
+            case 'sqlsrv':
+                $result = DB::select("
+                SELECT COUNT(*) as count
+                FROM sys.tables
+                WHERE name LIKE ?", [$pattern]);
+                $count = $result[0]->count;
+                break;
+        }
+        $this->assertEquals(1, $count);
+
+
+        Carbon::setTestNow();
+    }
 
 }
