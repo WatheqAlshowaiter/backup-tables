@@ -37,9 +37,9 @@ class BackupTablesTest extends TestCase
         $this->assertFalse(BackupTables::generateBackup($emptyArray));
     }
 
-    public function test_generate_single_table_backup_with_proper_name()
+    public function test_generate_single_table_backup()
     {
-        dump([2 => __FUNCTION__]);
+        dump([3 => __FUNCTION__]);
 
         Carbon::setTestNow();
 
@@ -49,29 +49,7 @@ class BackupTablesTest extends TestCase
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
-    }
 
-
-    public function test_generate_single_table_backup_all_table_data()
-    {
-        dump([3=> __FUNCTION__]);
-
-        Carbon::setTestNow();
-        $tableName = 'fathers';
-
-        Father::create([
-            'first_name' => 'Ahmed',
-            'last_name' => 'Saleh',
-            'email' => 'father@email.com',
-        ]);
-
-        BackupTables::generateBackup($tableName);
-
-        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-
-        $this->assertTrue(Schema::hasTable($newTableName));
-
-        // todo Debugging output to inspect the contents of the backup table
         $backupData = DB::table($newTableName)->get();
         dump([
             DB::getDriverName(),
@@ -121,7 +99,7 @@ class BackupTablesTest extends TestCase
 
     }
 
-    public function test_generate_2_single_table_backup_all_table_data()
+    public function test_generate_single_table_backup_then_another_table_backup_later()
     {
         dump([5 => __FUNCTION__]);
 
@@ -172,7 +150,7 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_multiple_table_backup()
     {
-        dump([6 => __FUNCTION__]);
+        dump([6=> __FUNCTION__]);
 
         Carbon::setTestNow();
         $tableName = 'fathers';
