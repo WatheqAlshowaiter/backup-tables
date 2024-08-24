@@ -273,7 +273,7 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
-        $pattern = "{$tableName}_backup_%";
+        $pattern = "{$newTableName}";
         $databaseDriver = DB::getDriverName();
         $count = 0;
 
