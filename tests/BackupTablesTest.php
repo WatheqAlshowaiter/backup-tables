@@ -41,7 +41,8 @@ class BackupTablesTest extends TestCase
     {
         dump([3 => __FUNCTION__]);
 
-        Carbon::setTestNow(now());
+        $dateTime = Carbon::parse("2024-01-01 12:12:08");
+        Carbon::setTestNow($dateTime);
 
         $tableName = 'fathers';
         BackupTables::generateBackup($tableName);
@@ -105,7 +106,8 @@ class BackupTablesTest extends TestCase
     {
         dump([5 => __FUNCTION__]);
 
-        Carbon::setTestNow(now());
+        $dateTime = Carbon::parse("2024-01-01 12:12:08");
+        Carbon::setTestNow($dateTime);
 
         $fatherTable = 'fathers';
         $sonTable = 'sons';
@@ -156,7 +158,9 @@ class BackupTablesTest extends TestCase
     {
         dump([6=> __FUNCTION__]);
 
-        Carbon::setTestNow(now());
+        $dateTime = Carbon::parse("2024-01-01 12:12:08");
+        Carbon::setTestNow($dateTime);
+
         $tableName = 'fathers';
         $tableName2 = 'sons';
 
@@ -197,7 +201,9 @@ class BackupTablesTest extends TestCase
     {
         dump([7 => __FUNCTION__]);
 
-        Carbon::setTestNow(now());
+        $dateTime = Carbon::parse("2024-01-01 12:12:08");
+        Carbon::setTestNow($dateTime);
+
         $tableName = 'fathers';
         $customFormat = 'Y_d_m_H_i';
 
@@ -214,7 +220,8 @@ class BackupTablesTest extends TestCase
     //{
 //dump([8 => __FUNCTION__]);
 
-    //    Carbon::setTestNow();
+//$dateTime = Carbon::parse("2024-01-01 12:12:08");
+//Carbon::setTestNow($dateTime);
     //    $tableName = Father::class;
     //    $tableName2 = Son::class;
     //
