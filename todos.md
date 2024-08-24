@@ -17,5 +17,5 @@
 - [x] fix for SQL Server
 - [x] return back all tests
 - [x] return back pint formatting GitHub actions
-- [] return tests actions to one file
+- [x] return tests actions to one file
 - [x] clean up the code, fix all todo in the code, and remove commented code

@@ -5,7 +5,7 @@ on:
     paths:
       - "**.php"
       - ".github/workflows/tests-for-laravel-versions.yml"
-      - ".github/workflows/tests-for-sql-databases.yml"
+      - ".github/workflows/tests-for-databases.yml"
       - "phpunit.xml.dist"
       - "composer.json"
       - "composer.lock"
@@ -101,7 +101,6 @@ jobs:
         env:
           DB_CONNECTION: mysql
           DB_COLLATION: utf8mb4_unicode_ci
-
   mssql:
     runs-on: ubuntu-20.04
 
@@ -155,7 +154,6 @@ jobs:
           DB_DATABASE: master
           DB_USERNAME: SA
           DB_PASSWORD: Forge123
-
   mariadb:
     runs-on: ubuntu-24.04
 
@@ -200,7 +198,6 @@ jobs:
         run: vendor/bin/phpunit
         env:
           DB_CONNECTION: mariadb
-
   pgsql:
     runs-on: ubuntu-24.04
 
