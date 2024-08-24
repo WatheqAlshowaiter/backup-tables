@@ -115,6 +115,19 @@ class BackupTablesService
 
         // for MySQL 5.7
 
+
+
+        DB::statement("Create TABLE IF Not exists $newTableName like $table");
+
+        $columns = collect(DB::select("SHOW COLUMNS FROM $table"))
+            ->reject(function ($column) {
+                return str_contains($column->Extra, 'VIRTUAL GENERATED') || str_contains($column->Extra, 'STORED GENERATED');
+            })->pluck('Field')
+            ->implode(', ');
+
+        DB::statement(/**@lang MySQL */ "INSERT INTO $newTableName ($columns) SELECT $columns FROM $table");
+
+
         // Step 1: Create the new table with the same structure, including generated columns
         //DB::statement(/**@lang MySQL */ "CREATE TABLE $newTableName LIKE $table");
 
@@ -124,8 +137,8 @@ class BackupTablesService
         // Step 5: Alter new table to add the generated tables definitions.
 
 
-        $generatedColumns = collect(DB::select(DB::raw('SHOW COLUMNS FROM $table')))
-        ;
+        //$generatedColumns = collect(DB::select(DB::raw('SHOW COLUMNS FROM $table')))
+        //;
 
         // Step 2: Get the list of columns, excluding generated columns
         //$columns = collect(DB::select(DB::raw("SHOW COLUMNS FROM $table")))
@@ -137,7 +150,7 @@ class BackupTablesService
         // Step 3: Insert data into the new table, excluding generated columns
         //DB::statement(/**@lang MySQL */ "INSERT INTO $newTableName ($columns) SELECT $columns FROM $table");
 
-        DB::statement(/**@lang PostgreSQL */ "CREATE TABLE $newTableName AS SELECT * FROM $table"); // todo for now
+        //DB::statement(/**@lang PostgreSQL */ "CREATE TABLE $newTableName AS SELECT * FROM $table"); // todo for now
         return $this->returnedBackupResponse($newTableName, $table);
     }
 
