@@ -55,14 +55,14 @@ BackupTables::generateBackup(['users', 'posts']);
 ```php
 BackupTables::generateBackup(User::class); // users_backup_2024_08_22_17_40_01
 // or
-BackupTables::generateBackup([User::class, Post:class]); // users_backup_2024_08_22_17_40_01, posts_backup_2024_08_22_17_40_01 
+BackupTables::generateBackup([User::class, Post::class]); // users_backup_2024_08_22_17_40_01, posts_backup_2024_08_22_17_40_01 
  
 ```
 
 - You can customize the $dataTime format to whatever you want
 
 ```php
-BackupTables::generateBackup(`users', 'Y_d_m_H_i'); // users_backup_2024_22_08_17_40
+BackupTables::generateBackup('users', 'Y_d_m_H_i'); // users_backup_2024_22_08_17_40
 ```
 
 > *Note: be aware if you customize the datetime to wide datetime the package will check the backup datetime file and
@@ -71,8 +71,8 @@ BackupTables::generateBackup(`users', 'Y_d_m_H_i'); // users_backup_2024_22_08_1
 > For example: if you use this `Y_d_m_H` you can not generate the same backup in the same hour
 
 ```php
-BackupTables::generateBackup(`users', 'Y_d_m_H'); // can not generate the same backup in the same hour
-BackupTables::generateBackup(`users', 'Y_d_m'); // can not generate the same backup in the same day
+BackupTables::generateBackup('users', 'Y_d_m_H'); // can not generate the same backup in the same hour
+BackupTables::generateBackup('users', 'Y_d_m'); // can not generate the same backup in the same day
 ```
 
 ## Why?
