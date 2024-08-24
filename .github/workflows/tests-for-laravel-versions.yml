@@ -5,11 +5,7 @@ on:
     paths:
       - "**.php"
       - ".github/workflows/tests-for-laravel-versions.yml"
-      - ".github/workflows/tests-for-sql-server.yml"
-      - ".github/workflows/tests-for-postgres.yml"
-      - ".github/workflows/test-for-mariadb.yml"
-      - ".github/workflows/tests-for-mysql.yml"
-      - ".github/workflows/tests-for-mysql8.yml"
+      - ".github/workflows/tests-for-sql-databases.yml"
       - "phpunit.xml.dist"
       - "composer.json"
       - "composer.lock"

@@ -3,7 +3,6 @@
 namespace WatheqAlshowaiter\BackupTables\Tests;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +20,6 @@ class BackupTablesTest extends TestCase
 
     public function test_return_when_table_is_not_correct()
     {
-        dump([1 => __FUNCTION__]);
         $tableName = 'not_correct_table_name';
 
         $this->assertFalse(BackupTables::generateBackup($tableName));
@@ -29,8 +27,6 @@ class BackupTablesTest extends TestCase
 
     public function test_return_when_table_string_empty()
     {
-        dump([2 => __FUNCTION__]);
-
         $emptyString = '';
         $emptyArray = [];
 
@@ -40,8 +36,6 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup()
     {
-        dump([3 => __FUNCTION__]);
-
         $dateTime = Carbon::parse("2024-01-01 12:12:08");
         Carbon::setTestNow($dateTime);
 
@@ -52,17 +46,11 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
-        $backupData = DB::table($newTableName)->get();
-        dump([
-            DB::getDriverName(),
-            $backupData
-        ]);
-
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs/VirtualAs column
         }
 
         Carbon::setTestNow();
@@ -71,9 +59,9 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup_with_different_data()
     {
-        dump([4=> __FUNCTION__]);
+        $dateTime = Carbon::parse("2024-01-07 12:12:08");
+        Carbon::setTestNow($dateTime);
 
-        Carbon::setTestNow();
         $tableName = 'mothers';
 
         Mother::create([
@@ -87,12 +75,6 @@ class BackupTablesTest extends TestCase
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
-        // todo Debugging output to inspect the contents of the backup table
-        $backupData = DB::table($newTableName)->get();
-        dump([
-            DB::getDriverName(),
-            $backupData
-        ]);
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
@@ -101,12 +83,11 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table($tableName)->value('ulid'), DB::table($newTableName)->value('ulid'));
         $this->assertEquals(DB::table($tableName)->value('description'), DB::table($newTableName)->value('description'));
 
+        Carbon::setTestNow();
     }
 
     public function test_generate_single_table_backup_then_another_table_backup_later()
     {
-        dump([5 => __FUNCTION__]);
-
         $dateTime = Carbon::parse("2024-01-02 12:12:08");
         Carbon::setTestNow($dateTime);
 
@@ -129,26 +110,12 @@ class BackupTablesTest extends TestCase
         $newFatherTable =  $fatherTable . '_backup_' . $currentDateTime;
         $newSonTable = $sonTable . '_backup_' . $currentDateTime;
 
-        // todo Debugging output to inspect the contents of the backup table
-        $backupData = DB::table($fatherTable)->get();
-        dump([
-            DB::getDriverName(),
-            $backupData
-        ]);
-
         $this->assertTrue(Schema::hasTable($newFatherTable));
 
         $this->assertEquals(DB::table('fathers')->value('first_name'), DB::table($newFatherTable)->value('first_name'));
         $this->assertEquals(DB::table('fathers')->value('email'), DB::table($newFatherTable)->value('email'));
 
         BackupTables::generateBackup($sonTable);
-
-        // todo Debugging output to inspect the contents of the backup table
-        $backupData = DB::table($newSonTable)->get();
-        dump([
-            DB::getDriverName(),
-            $backupData
-        ]);
 
         $this->assertTrue(Schema::hasTable($newSonTable));
         $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newSonTable)->value('father_id'));
@@ -157,8 +124,6 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_multiple_table_backup()
     {
-        dump([6=> __FUNCTION__]);
-
         $dateTime = Carbon::parse("2024-01-03 12:12:08");
         Carbon::setTestNow($dateTime);
 
@@ -188,20 +153,16 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs/VirtualAs column
         }
 
-        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+        $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id'));
 
         Carbon::setTestNow();
     }
 
-
-
     public function test_generate_single_table_backup_with_with_custom_format()
     {
-        dump([7 => __FUNCTION__]);
-
         $dateTime = Carbon::parse("2024-01-01 12:12:08");
         Carbon::setTestNow($dateTime);
 
@@ -214,13 +175,10 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newTableName));
         Carbon::setTestNow();
-
     }
 
     public function test_generate_multiple_models_backup()
     {
-        dump([8 => __FUNCTION__]);
-
         $dateTime = Carbon::parse("2024-01-04 12:12:08");
         Carbon::setTestNow($dateTime);
         $tableName = Father::class;
@@ -252,7 +210,7 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
         if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs tables
+            $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs/VirtualAs column
         }
 
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
@@ -260,8 +218,6 @@ class BackupTablesTest extends TestCase
 
     public function test_skip_duplicated_backups()
     {
-        dump([9 => __FUNCTION__]);
-
         $dateTime = Carbon::parse("2024-01-05 12:12:08");
         Carbon::setTestNow($dateTime);
 
