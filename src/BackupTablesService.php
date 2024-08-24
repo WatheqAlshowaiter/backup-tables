@@ -164,7 +164,7 @@ class BackupTablesService
     /**
      * @return array[]
      */
-    public function returnedBackupResponse($newTableName, $table): array
+    protected function returnedBackupResponse($newTableName, $table): array
     {
         $result = [
             'response' => "Table '$table' completed backup successfully.",
@@ -180,14 +180,14 @@ class BackupTablesService
     /**
      * @return array|string|string[]
      */
-    private function buildBackupFilename(string $table, string $currentDateTime)
+    protected function buildBackupFilename(string $table, string $currentDateTime)
     {
         $newTableName = $table.'_backup_'.$currentDateTime;
 
         return str_replace(['-', ':'], '_', $newTableName);
     }
 
-    private function getMysqlVersion(): float
+    protected function getMysqlVersion(): float
     {
         return (float) DB::select('select version()')[0]->{'version()'};
     }

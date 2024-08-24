@@ -5,8 +5,7 @@ namespace WatheqAlshowaiter\BackupTables;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * public function backupTables($tablesToBackup = []): bool
- * protected function processBackup(array $tablesToBackup = []): array
+ * public function generateBackup($tablesToBackup, string $dataTimeText = 'Y_m_d_H_i_s'): bool
  * public function convertModelToTableName($table): string
  */
 class BackupTables extends Facade
