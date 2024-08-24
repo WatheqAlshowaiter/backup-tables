@@ -10,4 +10,3 @@ class Mother extends Model
 
     public $timestamps = false;
 }
-
