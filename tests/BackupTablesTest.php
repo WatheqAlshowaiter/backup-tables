@@ -276,9 +276,11 @@ class BackupTablesTest extends TestCase
         $pattern = "{$tableName}_backup_%";
         $databaseDriver = DB::getDriverName();
         $count = 0;
+
         switch ($databaseDriver) {
             case 'mysql':
-                $result = DB::select("
+            case 'mariadb':
+                $result = DB::select(/**@lang MySQL*/"
                 SELECT COUNT(*) as count
                 FROM information_schema.tables
                 WHERE table_schema = DATABASE()
@@ -287,7 +289,7 @@ class BackupTablesTest extends TestCase
                 break;
 
             case 'pgsql':
-                $result = DB::select("
+                $result = DB::select(/**@lang PostgreSQL*/"
                 SELECT COUNT(*) as count
                 FROM information_schema.tables
                 WHERE table_schema = 'public'
@@ -303,7 +305,7 @@ class BackupTablesTest extends TestCase
                 break;
 
             case 'sqlsrv':
-                $result = DB::select("
+                $result = DB::select(/**@lang TSQL*/"
                 SELECT COUNT(*) as count
                 FROM sys.tables
                 WHERE name LIKE ?", [$pattern]);
