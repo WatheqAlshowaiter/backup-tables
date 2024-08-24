@@ -105,7 +105,8 @@ class BackupTablesTest extends TestCase
     {
         dump([5 => __FUNCTION__]);
 
-        Carbon::setTestNow();
+        Carbon::setTestNow(now());
+
         $fatherTable = 'fathers';
         $sonTable = 'sons';
 
@@ -148,13 +149,14 @@ class BackupTablesTest extends TestCase
 
         $this->assertTrue(Schema::hasTable($newSonTable));
         $this->assertEquals(DB::table('sons')->value('father_id'), DB::table($newSonTable)->value('father_id'));
+        Carbon::setTestNow(now());
     }
 
     public function test_generate_multiple_table_backup()
     {
         dump([6=> __FUNCTION__]);
 
-        Carbon::setTestNow();
+        Carbon::setTestNow(now());
         $tableName = 'fathers';
         $tableName2 = 'sons';
 
@@ -185,6 +187,8 @@ class BackupTablesTest extends TestCase
         }
 
         $this->assertEquals(DB::table($tableName2)->value('father_id'), DB::table($newTableName2)->value('father_id')); // foreign key
+
+        Carbon::setTestNow();
     }
 
 
