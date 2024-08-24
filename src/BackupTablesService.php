@@ -15,9 +15,8 @@ class BackupTablesService
     /**
      * Generate backup for the given table or tables
      *
-     * @param string|array $tablesToBackup
-     * @param string $dataTimeText
-     * @return bool
+     * @param  string|array  $tablesToBackup
+     *
      * @throws Exception
      */
     public function generateBackup($tablesToBackup, string $dataTimeText = 'Y_m_d_H_i_s'): bool
@@ -38,7 +37,7 @@ class BackupTablesService
             $output->writeln($message);
         }
 
-        if(! empty(data_get($result, 'response.0.newCreatedTables'))){
+        if (! empty(data_get($result, 'response.0.newCreatedTables'))) {
             return true;
         }
 
@@ -60,7 +59,7 @@ class BackupTablesService
                 continue;
             }
 
-            if (!Schema::hasTable($table)) {
+            if (! Schema::hasTable($table)) {
                 $this->response[] = "Table `$table` is not exists. check the table name again";
 
                 continue;
@@ -110,6 +109,7 @@ class BackupTablesService
 
         if ($this->getMysqlVersion() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             DB::statement(/**@lang PostgreSQL */ "CREATE TABLE $newTableName AS SELECT * FROM $table");
+
             return $this->returnedBackupResponse($newTableName, $table);
         }
 
@@ -124,7 +124,6 @@ class BackupTablesService
             ->implode(', ');
 
         DB::statement(/**@lang MySQL */ "INSERT INTO $newTableName ($columns) SELECT $columns FROM $table");
-
 
         return $this->returnedBackupResponse($newTableName, $table);
     }
@@ -145,15 +144,11 @@ class BackupTablesService
 
     protected function backupTablesForForSqlServer($newTableName, $table): array
     {
-        DB::statement(/**@lang TSQL*/"SELECT * INTO $newTableName FROM $table");
+        DB::statement(/**@lang TSQL*/ "SELECT * INTO $newTableName FROM $table");
 
         return $this->returnedBackupResponse($newTableName, $table);
     }
 
-    /**
-     * @param $table
-     * @return string
-     */
     public function convertModelToTableName($table): string
     {
         $modelParent = "Illuminate\Database\Eloquent\Model";
@@ -162,17 +157,16 @@ class BackupTablesService
                 $table = (new $table)->getTable();
             }
         }
+
         return $table;
     }
 
     /**
-     * @param $newTableName
-     * @param $table
      * @return array[]
      */
     public function returnedBackupResponse($newTableName, $table): array
     {
-        $result =  [
+        $result = [
             'response' => "Table '$table' completed backup successfully.",
             'newCreatedTables' => "Newly created table: $newTableName",
         ];
@@ -184,18 +178,17 @@ class BackupTablesService
     }
 
     /**
-     * @param string $table
-     * @param string $currentDateTime
      * @return array|string|string[]
      */
     private function buildBackupFilename(string $table, string $currentDateTime)
     {
-        $newTableName = $table . '_backup_' . $currentDateTime;
+        $newTableName = $table.'_backup_'.$currentDateTime;
+
         return str_replace(['-', ':'], '_', $newTableName);
     }
 
     private function getMysqlVersion(): float
     {
-        return (float)DB::select('select version()')[0]->{'version()'};
+        return (float) DB::select('select version()')[0]->{'version()'};
     }
 }

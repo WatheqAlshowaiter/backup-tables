@@ -2,21 +2,19 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
-use WatheqAlshowaiter\BackupTables\Constants;
 
 class CreateSonsTable extends Migration
+{
+    public function up(): void
     {
-        public function up(): void
-        {
-            Schema::create('sons', function (Blueprint $table) {
-                $table->bigIncrements('id');
+        Schema::create('sons', function (Blueprint $table) {
+            $table->bigIncrements('id');
 
-                $table->unsignedBigInteger('father_id');
-                $table->foreign('father_id')->references('id')->on('fathers');
-            });
-        }
+            $table->unsignedBigInteger('father_id');
+            $table->foreign('father_id')->references('id')->on('fathers');
+        });
+    }
 
     public function down(): void
     {

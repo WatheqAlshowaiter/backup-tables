@@ -30,11 +30,10 @@ class CreateFathersTable extends Migration
                 $table->string('full_name')->storedAs("first_name || ' ' || last_name");
             }
 
-
             $table->timestamps();
         });
 
-        if ((float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName() == 'sqlsrv') {
+        if ((float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT && DB::getDriverName() == 'sqlsrv') {
             DB::statement(/**@lang TSQL */ "
             ALTER TABLE fathers
             ADD full_name AS CONCAT(first_name, ' ', last_name) PERSISTED;

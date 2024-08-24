@@ -36,7 +36,7 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup()
     {
-        $dateTime = Carbon::parse("2024-01-01 12:12:08");
+        $dateTime = Carbon::parse('2024-01-01 12:12:08');
         Carbon::setTestNow($dateTime);
 
         $tableName = 'fathers';
@@ -56,10 +56,9 @@ class BackupTablesTest extends TestCase
         Carbon::setTestNow();
     }
 
-
     public function test_generate_single_table_backup_with_different_data()
     {
-        $dateTime = Carbon::parse("2024-01-07 12:12:08");
+        $dateTime = Carbon::parse('2024-01-07 12:12:08');
         Carbon::setTestNow($dateTime);
 
         $tableName = 'mothers';
@@ -68,13 +67,12 @@ class BackupTablesTest extends TestCase
             'types' => 'one',
             'uuid' => Str::uuid(),
             'ulid' => '01J5Y93TVJRVFCSRQFHHF2NRC4',
-            'description' => "{ar: 'some description'}"
+            'description' => "{ar: 'some description'}",
         ]);
 
         BackupTables::generateBackup($tableName);
 
         $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
-
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
@@ -88,7 +86,7 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup_then_another_table_backup_later()
     {
-        $dateTime = Carbon::parse("2024-01-02 12:12:08");
+        $dateTime = Carbon::parse('2024-01-02 12:12:08');
         Carbon::setTestNow($dateTime);
 
         $fatherTable = 'fathers';
@@ -107,8 +105,8 @@ class BackupTablesTest extends TestCase
         BackupTables::generateBackup($fatherTable);
 
         $currentDateTime = now()->format('Y_m_d_H_i_s');
-        $newFatherTable =  $fatherTable . '_backup_' . $currentDateTime;
-        $newSonTable = $sonTable . '_backup_' . $currentDateTime;
+        $newFatherTable = $fatherTable.'_backup_'.$currentDateTime;
+        $newSonTable = $sonTable.'_backup_'.$currentDateTime;
 
         $this->assertTrue(Schema::hasTable($newFatherTable));
 
@@ -124,7 +122,7 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_multiple_table_backup()
     {
-        $dateTime = Carbon::parse("2024-01-03 12:12:08");
+        $dateTime = Carbon::parse('2024-01-03 12:12:08');
         Carbon::setTestNow($dateTime);
 
         $tableName = 'fathers';
@@ -138,7 +136,7 @@ class BackupTablesTest extends TestCase
         ]);
 
         Son::create([
-            'father_id' => Father::value('id')
+            'father_id' => Father::value('id'),
         ]);
 
         BackupTables::generateBackup([$tableName, $tableName2]);
@@ -163,7 +161,7 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_single_table_backup_with_with_custom_format()
     {
-        $dateTime = Carbon::parse("2024-01-01 12:12:08");
+        $dateTime = Carbon::parse('2024-01-01 12:12:08');
         Carbon::setTestNow($dateTime);
 
         $tableName = 'fathers';
@@ -179,7 +177,7 @@ class BackupTablesTest extends TestCase
 
     public function test_generate_multiple_models_backup()
     {
-        $dateTime = Carbon::parse("2024-01-04 12:12:08");
+        $dateTime = Carbon::parse('2024-01-04 12:12:08');
         Carbon::setTestNow($dateTime);
         $tableName = Father::class;
         $tableName2 = Son::class;
@@ -192,7 +190,7 @@ class BackupTablesTest extends TestCase
         ]);
 
         Son::create([
-            'father_id' => Father::value('id')
+            'father_id' => Father::value('id'),
         ]);
 
         BackupTables::generateBackup([$tableName, $tableName2]);
@@ -200,8 +198,8 @@ class BackupTablesTest extends TestCase
         $tableName = BackupTables::convertModelToTableName($tableName);
         $tableName2 = BackupTables::convertModelToTableName($tableName2);
 
-        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
-        $newTableName2 = $tableName2 . '_backup_' . now()->format('Y_m_d_H_i_s');
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
+        $newTableName2 = $tableName2.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
         $this->assertTrue(Schema::hasTable($newTableName2));
@@ -209,7 +207,7 @@ class BackupTablesTest extends TestCase
         $this->assertEquals(DB::table($tableName)->value('first_name'), DB::table($newTableName)->value('first_name'));
         $this->assertEquals(DB::table($tableName)->value('email'), DB::table($newTableName)->value('email'));
 
-        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float)App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
+        if (DB::getDriverName() == 'mysql' || DB::getDriverName() == 'mariadb' || (float) App::version() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
             $this->assertEquals(DB::table($tableName)->value('full_name'), DB::table($newTableName)->value('full_name')); // StoredAs/VirtualAs column
         }
 
@@ -218,14 +216,14 @@ class BackupTablesTest extends TestCase
 
     public function test_skip_duplicated_backups()
     {
-        $dateTime = Carbon::parse("2024-01-05 12:12:08");
+        $dateTime = Carbon::parse('2024-01-05 12:12:08');
         Carbon::setTestNow($dateTime);
 
         $tableName = 'fathers';
         BackupTables::generateBackup($tableName);
         BackupTables::generateBackup($tableName); // another backup up will be skipped
 
-        $newTableName = $tableName . '_backup_' . now()->format('Y_m_d_H_i_s');
+        $newTableName = $tableName.'_backup_'.now()->format('Y_m_d_H_i_s');
 
         $this->assertTrue(Schema::hasTable($newTableName));
 
@@ -236,16 +234,16 @@ class BackupTablesTest extends TestCase
         switch ($databaseDriver) {
             case 'mysql':
             case 'mariadb':
-                $result = DB::select(/**@lang MySQL*/"
+                $result = DB::select(/**@lang MySQL*/ '
                 SELECT COUNT(*) as count
                 FROM information_schema.tables
                 WHERE table_schema = DATABASE()
-                AND table_name LIKE ?", [$pattern]);
+                AND table_name LIKE ?', [$pattern]);
                 $count = $result[0]->count;
                 break;
 
             case 'pgsql':
-                $result = DB::select(/**@lang PostgreSQL*/"
+                $result = DB::select(/**@lang PostgreSQL*/ "
                 SELECT COUNT(*) as count
                 FROM information_schema.tables
                 WHERE table_schema = 'public'
@@ -261,17 +259,15 @@ class BackupTablesTest extends TestCase
                 break;
 
             case 'sqlsrv':
-                $result = DB::select(/**@lang TSQL*/"
+                $result = DB::select(/**@lang TSQL*/ '
                 SELECT COUNT(*) as count
                 FROM sys.tables
-                WHERE name LIKE ?", [$pattern]);
+                WHERE name LIKE ?', [$pattern]);
                 $count = $result[0]->count;
                 break;
         }
         $this->assertEquals(1, $count);
 
-
         Carbon::setTestNow();
     }
-
 }
