@@ -15,7 +15,6 @@
 - [x] fix for foreign keys, and return foreign key father_id
 - [x] fix for MySQL 5.7 with new implementation
 - [x] fix for SQL Server
-- [ ] return back all tests
-- [ ] check the console output when backup is correct and make in tests (prefer)
-- [ ] return back pint formatting GitHub actions
+- [x] return back all tests
+- [x] return back pint formatting GitHub actions
 - [ ] clean up the code, fix all todo in the code, and remove commented code
