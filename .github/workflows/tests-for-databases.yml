@@ -1,4 +1,4 @@
-name: tests-for-mysql8
+name: tests-for-databases
 
 on:
   push:
