@@ -1,6 +1,6 @@
 <?php
 
-namespace WatheqAlshowaiter\BackupTables\Models;
+namespace WatheqAlshowaiter\BackupTables\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

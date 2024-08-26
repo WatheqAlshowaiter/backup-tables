@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use WatheqAlshowaiter\BackupTables\BackupTables;
 use WatheqAlshowaiter\BackupTables\Constants;
-use WatheqAlshowaiter\BackupTables\Models\Father;
-use WatheqAlshowaiter\BackupTables\Models\Mother;
-use WatheqAlshowaiter\BackupTables\Models\Son;
+use WatheqAlshowaiter\BackupTables\Tests\Models\Father;
+use WatheqAlshowaiter\BackupTables\Tests\Models\Mother;
+use WatheqAlshowaiter\BackupTables\Tests\Models\Son;
 
 class BackupTablesTest extends TestCase
 {
