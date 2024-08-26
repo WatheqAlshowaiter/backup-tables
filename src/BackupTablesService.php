@@ -7,6 +7,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\SqliteBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\MysqlBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\MariaDbBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\SqlServerBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\PostgresBackupStrategy;
 
 class BackupTablesService
 {
@@ -44,6 +49,9 @@ class BackupTablesService
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function processBackup(array $tablesToBackup = [], $dateTimeFormat = 'Y_m_d_H_i_s'): array
     {
         $currentDateTime = now()->format($dateTimeFormat);
@@ -67,86 +75,18 @@ class BackupTablesService
 
             $databaseDriver = DB::connection()->getDriverName();
 
+            $backupStrategy = $this->getBackupStrategy($databaseDriver);
+
             Schema::disableForeignKeyConstraints();
 
-            switch ($databaseDriver) {
-                case 'sqlite':
-                    $this->response[] = $this->backupTablesForSqlite($newTableName, $table);
-                    break;
-                case 'mysql':
-                    $this->response[] = $this->backupTablesForForMysql($newTableName, $table);
-                    break;
-                case 'mariadb':
-                    $this->response[] = $this->backupTablesForForMariaDb($newTableName, $table);
-                    break;
-                case 'pgsql':
-                    $this->response[] = $this->backupTablesForForPostgres($newTableName, $table);
-                    break;
-                case 'sqlsrv':
-                    $this->response[] = $this->backupTablesForForSqlServer($newTableName, $table);
-                    break;
-                default:
-                    throw new Exception('NOT SUPPORTED DATABASE DRIVER');
-            }
+            $this->response[] = $backupStrategy->backup($newTableName, $table);
+
             Schema::enableForeignKeyConstraints();
         }
 
         return [
             'response' => $this->response,
         ];
-    }
-
-    protected function backupTablesForSqlite($newTableName, $table): array
-    {
-        DB::statement(/**@lang SQLite */ "CREATE TABLE $newTableName AS SELECT * FROM $table WHERE 1=0;");
-        DB::statement(/**@lang SQLite */ "INSERT INTO $newTableName SELECT * FROM $table");
-
-        return $this->returnedBackupResponse($newTableName, $table);
-    }
-
-    protected function backupTablesForForMysql($newTableName, $table): array
-    {
-
-        if ($this->getMysqlVersion() >= Constants::VERSION_AFTER_STORED_AS_VIRTUAL_AS_SUPPORT) {
-            DB::statement(/**@lang PostgreSQL */ "CREATE TABLE $newTableName AS SELECT * FROM $table");
-
-            return $this->returnedBackupResponse($newTableName, $table);
-        }
-
-        // for MySQL 5.7
-
-        DB::statement("Create TABLE IF Not exists $newTableName like $table");
-
-        $columns = collect(DB::select("SHOW COLUMNS FROM $table"))
-            ->reject(function ($column) {
-                return str_contains($column->Extra, 'VIRTUAL GENERATED') || str_contains($column->Extra, 'STORED GENERATED');
-            })->pluck('Field')
-            ->implode(', ');
-
-        DB::statement(/**@lang MySQL */ "INSERT INTO $newTableName ($columns) SELECT $columns FROM $table");
-
-        return $this->returnedBackupResponse($newTableName, $table);
-    }
-
-    protected function backupTablesForForMariaDb($newTableName, $table): array
-    {
-        DB::statement(/**@lang MariaDB*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
-
-        return $this->returnedBackupResponse($newTableName, $table);
-    }
-
-    protected function backupTablesForForPostgres($newTableName, $table): array
-    {
-        DB::statement(/**@lang PostgreSQL*/ "CREATE TABLE $newTableName AS SELECT * FROM $table");
-
-        return $this->returnedBackupResponse($newTableName, $table);
-    }
-
-    protected function backupTablesForForSqlServer($newTableName, $table): array
-    {
-        DB::statement(/**@lang TSQL*/ "SELECT * INTO $newTableName FROM $table");
-
-        return $this->returnedBackupResponse($newTableName, $table);
     }
 
     public function convertModelToTableName($table): string
@@ -187,8 +127,24 @@ class BackupTablesService
         return str_replace(['-', ':'], '_', $newTableName);
     }
 
-    protected function getMysqlVersion(): float
+    /**
+     * @throws Exception
+     */
+    protected function getBackupStrategy(string $databaseDriver)
     {
-        return (float) DB::select('select version()')[0]->{'version()'};
+        switch ($databaseDriver) {
+            case 'sqlite':
+                return new SqliteBackupStrategy();
+            case 'mysql':
+                return new MysqlBackupStrategy();
+            case 'mariadb':
+                return new MariaDbBackupStrategy();
+            case 'pgsql':
+                return new PostgresBackupStrategy();
+            case 'sqlsrv':
+                return new SqlServerBackupStrategy();
+            default:
+                throw new Exception('NOT SUPPORTED DATABASE DRIVER');
+        }
     }
 }
