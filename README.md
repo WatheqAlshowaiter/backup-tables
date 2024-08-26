@@ -118,6 +118,10 @@ them.
 - [Watheq Alshowaiter](https://github.com/WatheqAlshowaiter)
 - [Omar Alalwi](https://github.com/omaralalwi) - This package is based on his initial code.
 - [All Contributors](../../contributors)
+  
+
+And a special thanks to [Mohamed Ahmed](https://linktr.ee/mahmedm) for the logo ✨
+
 
 ## License
 
