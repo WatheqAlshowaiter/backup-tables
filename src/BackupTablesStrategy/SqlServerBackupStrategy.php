@@ -2,10 +2,9 @@
 
 namespace WatheqAlshowaiter\BackupTables\BackupTablesStrategy;
 
-
 use Illuminate\Support\Facades\DB;
 
- class SqlServerBackupStrategy extends BackupTablesStrategy
+class SqlServerBackupStrategy extends BackupTablesStrategy
 {
     public function backup($newTableName, $table): array
     {

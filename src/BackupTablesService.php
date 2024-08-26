@@ -7,11 +7,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\SqliteBackupStrategy;
-use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\MysqlBackupStrategy;
 use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\MariaDbBackupStrategy;
-use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\SqlServerBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\MysqlBackupStrategy;
 use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\PostgresBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\SqliteBackupStrategy;
+use WatheqAlshowaiter\BackupTables\BackupTablesStrategy\SqlServerBackupStrategy;
 
 class BackupTablesService
 {
@@ -134,15 +134,15 @@ class BackupTablesService
     {
         switch ($databaseDriver) {
             case 'sqlite':
-                return new SqliteBackupStrategy();
+                return new SqliteBackupStrategy;
             case 'mysql':
-                return new MysqlBackupStrategy();
+                return new MysqlBackupStrategy;
             case 'mariadb':
-                return new MariaDbBackupStrategy();
+                return new MariaDbBackupStrategy;
             case 'pgsql':
-                return new PostgresBackupStrategy();
+                return new PostgresBackupStrategy;
             case 'sqlsrv':
-                return new SqlServerBackupStrategy();
+                return new SqlServerBackupStrategy;
             default:
                 throw new Exception('NOT SUPPORTED DATABASE DRIVER');
         }

@@ -2,11 +2,9 @@
 
 namespace WatheqAlshowaiter\BackupTables\BackupTablesStrategy;
 
-
 use Illuminate\Support\Facades\DB;
-use WatheqAlshowaiter\BackupTables\Constants;
 
- class MysqlBackupStrategy extends BackupTablesStrategy
+class MysqlBackupStrategy extends BackupTablesStrategy
 {
     public function backup($newTableName, $table): array
     {
