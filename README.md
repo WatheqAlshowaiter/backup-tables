@@ -120,7 +120,7 @@ them.
 - [All Contributors](../../contributors)
   
 
-And a special thanks to [Mohamed Ahmed](https://www.facebook.com/thkingcreative) for the logo ✨
+And a special thanks to [The King Creative](https://www.facebook.com/thkingcreative) for the logo ✨
 
 
 ## License
