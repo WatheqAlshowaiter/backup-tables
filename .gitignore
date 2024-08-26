@@ -9,4 +9,4 @@ phpstan.neon
 testbench.yaml
 vendor
 node_modules
-
+report.junit.xml
